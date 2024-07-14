@@ -231,13 +231,6 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
 
-    private List<Task> updateHistory(Task task) {
-        if (task != null) {
-            historyManager.add(task);
-        }
-        return List.of();
-    }
-
 
 }
 
