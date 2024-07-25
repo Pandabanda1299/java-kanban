@@ -54,8 +54,7 @@ public class Main {
         Epic retrievedEpic = taskManager.getEpic(epicId1);
         SubTask retrievedSubtask = taskManager.getSubTask(subtaskId1);
 
-        // Получить список подзадач для эпика
-        List<SubTask> subTasksForEpic = taskManager.getTasks(epic1);
+
 
         // Удалить задачу и эпик
         taskManager.deleteTask(taskId2);
@@ -66,6 +65,6 @@ public class Main {
         System.out.println("Задача: " + retrievedTask);
         System.out.println("Эпик: " + retrievedEpic);
         System.out.println("Подзадача: " + retrievedSubtask);
-        System.out.println("Подзадачи для эпика: " + subTasksForEpic);
+        System.out.println("Подзадачи для эпика: " + subTask1);
     }
 }
