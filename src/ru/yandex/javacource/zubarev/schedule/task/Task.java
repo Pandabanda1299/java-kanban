@@ -1,5 +1,7 @@
 package ru.yandex.javacource.zubarev.schedule.task;
 
+import ru.yandex.javacource.zubarev.schedule.manager.InMemoryTaskManager;
+
 import java.util.Objects;
 
 public class Task {
@@ -21,10 +23,9 @@ public class Task {
         this.id = id;
     }
 
-    public Task(String description, String name, int id, ProgressTask progress) {
+    public Task(String description, String name, ProgressTask progress) {
         this.description = description;
         this.name = name;
-        this.id = id;
         this.progress = progress;
     }
 
@@ -57,7 +58,7 @@ public class Task {
         return progress;
     }
 
-    public void setProgress(ProgressTask progress) {
+  public void setProgress(ProgressTask progress) {
         this.progress = progress;
     }
 
@@ -72,13 +73,7 @@ public class Task {
     }
 
 
-//    @Override
-//    public boolean equals(Object o) {
-//        if (this == o) return true;
-//        if (o == null || getClass() != o.getClass()) return false;
-//        Task task = (Task) o;
-//        return id == task.id && Objects.equals(name, task.name) && Objects.equals(description, task.description) && progress == task.progress;
-//    }
+
 
     @Override
     public boolean equals(Object obj) {

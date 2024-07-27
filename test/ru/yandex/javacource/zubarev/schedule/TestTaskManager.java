@@ -120,7 +120,7 @@ public class TestTaskManager {
         manager.getTask(id);
         List<Task> tasks = manager.getHistory();
         Task savedTask = tasks.get(0);
-        Task task2 = new Task("Задача 1", "Обновленное Описание 1", id, ProgressTask.IN_PROGRESS);
+        Task task2 = new Task("Задача 1", "Обновленное Описание 1", ProgressTask.IN_PROGRESS);
         manager.updateTask(task2);
         List<Task> updatedTasks = manager.getHistory();
         Task updatedTask = updatedTasks.get(0);
@@ -156,4 +156,56 @@ public class TestTaskManager {
         assertEquals(savedTask, updatedTask);
 
     }
+
+
+    @Test
+    public void shouldReturnEpic() {
+        Epic epic = new Epic("Эпик 1", "Описание эпика 1");
+        int epicId = manager.addEpic(epic);
+        Epic savedEpic = manager.getEpic(epicId);
+        assertEquals(epic, savedEpic, "Созданный эпик не совпадает с сохраненным.");
+    }
+
+
+    @Test
+    void shouldRemoveSubtask() {
+        Epic epic = new Epic("Эпик 1", "Описание эпика 1");
+        int epicId = manager.addEpic(epic);
+        SubTask subtask = new SubTask("Подзадача 1", "Описание подзадачи 1", epicId);
+        int subtaskId = manager.addSubTask(subtask);
+        manager.deleteSubtask(subtaskId);
+        System.out.println(manager.getSubTasks());
+        Assertions.assertEquals(0, manager.getTasks(epic).size());
+
+    }
+
+    @Test
+    void  epicallyDeleteSubtask() {
+        Epic epic = new Epic("Эпик 1", "Описание эпика 1");
+        int epicId = manager.addEpic(epic);
+        SubTask subtask = new SubTask("Подзадача 1", "Описание подзадачи 1", epicId);
+        int subtaskId = manager.addSubTask(subtask);
+        manager.deleteSubtask(subtaskId);
+        Assertions.assertEquals(0, manager.getSubTasks().size());
+    }
+
+    @Test
+    void taskChangeDoesNotAffectManager(){
+        Task task = new Task("Задача 1", "Описание 1");
+        int id = manager.addTask(task);
+        task.setDescription("Обновленное Описание 2");
+        task.setName("Обновленное Название 2");
+        task.setProgress(ProgressTask.IN_PROGRESS);
+
+        Task retrivedTask = manager.getTask(manager.addTask(task));
+        Assertions.assertEquals(task, retrivedTask);
+        Assertions.assertNotEquals(task.getDescription(), retrivedTask.getDescription());
+        Assertions.assertNotEquals(task.getName(), retrivedTask.getName());
+        Assertions.assertNotEquals(task.getProgress(), retrivedTask.getProgress());
+
+
+    }
+
+
+
 }
