@@ -1,6 +1,5 @@
 package ru.yandex.javacource.zubarev.schedule.manager;
 
-import org.w3c.dom.Node;
 import ru.yandex.javacource.zubarev.schedule.task.Epic;
 import ru.yandex.javacource.zubarev.schedule.task.ProgressTask;
 import ru.yandex.javacource.zubarev.schedule.task.SubTask;
@@ -181,17 +180,6 @@ public class InMemoryTaskManager implements TaskManager {
         if (epic != null) {
             updateEpicStatus(epic.getId());
         }
-    }
-
-    @Override
-    public ArrayList<SubTask> getTasks(Epic epic) {
-        ArrayList<SubTask> subTasksForEpic = new ArrayList<>();
-        for (SubTask subTask : subTasks.values()) {
-            if (subTask.getIdEpic() == epic.getId()) {
-                subTasksForEpic.add(subTask);
-            }
-        }
-        return subTasksForEpic;
     }
 
 

@@ -2,15 +2,14 @@ package ru.yandex.javacource.zubarev.schedule;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import ru.yandex.javacource.zubarev.schedule.manager.HistoryManager;
+import ru.yandex.javacource.zubarev.schedule.manager.InMemoryTaskManager;
+import ru.yandex.javacource.zubarev.schedule.manager.Managers;
+import ru.yandex.javacource.zubarev.schedule.manager.TaskManager;
 import ru.yandex.javacource.zubarev.schedule.task.Epic;
 import ru.yandex.javacource.zubarev.schedule.task.ProgressTask;
 import ru.yandex.javacource.zubarev.schedule.task.SubTask;
 import ru.yandex.javacource.zubarev.schedule.task.Task;
-import ru.yandex.javacource.zubarev.schedule.manager.TaskManager;
-import ru.yandex.javacource.zubarev.schedule.manager.InMemoryTaskManager;
-import ru.yandex.javacource.zubarev.schedule.manager.HistoryManager;
-import ru.yandex.javacource.zubarev.schedule.manager.Managers;
-
 
 import java.util.List;
 

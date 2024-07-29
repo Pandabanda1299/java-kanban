@@ -7,8 +7,6 @@ import ru.yandex.javacource.zubarev.schedule.task.ProgressTask;
 import ru.yandex.javacource.zubarev.schedule.task.SubTask;
 import ru.yandex.javacource.zubarev.schedule.task.Task;
 
-import java.util.List;
-
 public class Main {
 
     public static void main(String[] args) {
