@@ -42,5 +42,5 @@ public interface TaskManager {
     void deleteSubtask(int id);
 
     ArrayList<SubTask> getTasks(Epic epic);
-    
+
 }

@@ -183,6 +183,17 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
 
+    @Override
+    public ArrayList<SubTask> getTasks(Epic epic) {
+        ArrayList<SubTask> subTasksForEpic = new ArrayList<>();
+        for (SubTask subTask : subTasks.values()) {
+            if (subTask.getIdEpic() == epic.getId()) {
+                subTasksForEpic.add(subTask);
+            }
+        }
+        return subTasksForEpic;
+    }
+
 
     @Override
     public ArrayList<SubTask> getTasks(Epic epic) {
