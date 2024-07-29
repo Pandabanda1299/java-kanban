@@ -13,17 +13,17 @@ public class InMemoryHistoryManager implements HistoryManager {
     private HistoryNode tail;
 
 
-        @Override
-        public void add(Task task) {
+    @Override
+    public void add(Task task) {
 
-            if (task == null) {
-                return;
-            }
-            if (taskMap.containsKey(task.getId())) {
-                removeNode(taskMap.get(task.getId()));
-            }
-            linkLast(task);
-            taskMap.put(task.getId(), tail);
+        if (task == null) {
+            return;
+        }
+        if (taskMap.containsKey(task.getId())) {
+            removeNode(taskMap.get(task.getId()));
+        }
+        linkLast(task);
+        taskMap.put(task.getId(), tail);
     }
 
     private void removeNode(HistoryNode node) {

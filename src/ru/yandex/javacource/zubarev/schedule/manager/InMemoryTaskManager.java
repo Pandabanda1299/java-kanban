@@ -22,7 +22,6 @@ public class InMemoryTaskManager implements TaskManager {
     private HistoryNode tail;
 
 
-
     @Override
     public List<Task> getHistory() {
         return historyManager.getHistory();
@@ -185,8 +184,6 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
 
-
-
     @Override
     public ArrayList<SubTask> getTasks(Epic epic) {
         ArrayList<SubTask> subTasksForEpic = new ArrayList<>();
@@ -197,7 +194,6 @@ public class InMemoryTaskManager implements TaskManager {
         }
         return subTasksForEpic;
     }
-
 
 
     private void updateEpicStatus(int epicId) {
@@ -227,7 +223,6 @@ public class InMemoryTaskManager implements TaskManager {
             epic.setProgress(ProgressTask.IN_PROGRESS);
         }
     }
-
 
 
 }

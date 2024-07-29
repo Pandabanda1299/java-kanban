@@ -26,7 +26,7 @@ public class Epic extends Task {
     }
 
 
-    public Epic(Epic epic){
+    public Epic(Epic epic) {
         super(epic);
         this.subTasks = epic.subTasks;
     }

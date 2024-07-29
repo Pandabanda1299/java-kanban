@@ -29,7 +29,6 @@ public class SubTask extends Task {
     }
 
 
-
     public void setIdEpicTask(int idEpicTask) {
         this.epicId = idEpicTask;
     }

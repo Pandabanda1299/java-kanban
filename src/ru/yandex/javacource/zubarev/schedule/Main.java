@@ -55,7 +55,6 @@ public class Main {
         SubTask retrievedSubtask = taskManager.getSubTask(subtaskId1);
 
 
-
         // Удалить задачу и эпик
         taskManager.deleteTask(taskId2);
         taskManager.deleteEpic(epicId2);

@@ -63,7 +63,7 @@ public class Task {
         return progress;
     }
 
-  public void setProgress(ProgressTask progress) {
+    public void setProgress(ProgressTask progress) {
         this.progress = progress;
     }
 
@@ -76,8 +76,6 @@ public class Task {
                 ", progress=" + progress +
                 '}';
     }
-
-
 
 
     @Override

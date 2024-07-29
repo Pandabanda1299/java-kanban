@@ -45,8 +45,6 @@ public class TestTaskManager {
     }
 
 
-
-
     @Test
     public void shouldReturnSameInstanceOfTaskManager() {
         TaskManager first = Managers.getDefault();
@@ -171,7 +169,7 @@ public class TestTaskManager {
     }
 
     @Test
-    void  epicallyDeleteSubtask() {
+    void epicallyDeleteSubtask() {
         Epic epic = new Epic("Эпик 1", "Описание эпика 1");
         int epicId = manager.addEpic(epic);
         SubTask subtask = new SubTask("Подзадача 1", "Описание подзадачи 1", epicId);
@@ -182,7 +180,7 @@ public class TestTaskManager {
 
 
     @Test
-    void taskChangeDoesNotAffectManager(){
+    void taskChangeDoesNotAffectManager() {
         Epic epic = new Epic("1", "2");
         int epicId = manager.addEpic(epic);
         SubTask subtask = new SubTask("Подзадача 1", "Описание подзадачи 1", epicId);
