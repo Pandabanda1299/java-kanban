@@ -1,5 +1,6 @@
 package ru.yandex.javacource.zubarev.schedule.manager;
 
+import org.w3c.dom.Node;
 import ru.yandex.javacource.zubarev.schedule.task.Epic;
 import ru.yandex.javacource.zubarev.schedule.task.ProgressTask;
 import ru.yandex.javacource.zubarev.schedule.task.SubTask;
@@ -17,11 +18,10 @@ public class InMemoryTaskManager implements TaskManager {
     private final HashMap<Integer, Epic> epics = new HashMap<>();
     private static int generatorId = 0;
     private final HistoryManager historyManager = Managers.getDefaultHistory();
+    private HistoryNode head;
+    private HistoryNode tail;
 
 
-//public static int getGeneratorId(){
-//    return ++generatorId;
-//}
 
     @Override
     public List<Task> getHistory() {
@@ -229,6 +229,7 @@ public class InMemoryTaskManager implements TaskManager {
             epic.setProgress(ProgressTask.IN_PROGRESS);
         }
     }
+
 
 
 }

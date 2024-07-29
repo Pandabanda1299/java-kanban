@@ -1,7 +1,5 @@
 package ru.yandex.javacource.zubarev.schedule.task;
 
-import ru.yandex.javacource.zubarev.schedule.manager.InMemoryTaskManager;
-
 import java.util.Objects;
 
 public class Task {

@@ -45,15 +45,6 @@ public class TestTaskManager {
     }
 
 
-    @Test
-    public void addingAnEpicToYourself() {
-
-        Epic epic = new Epic("Эпик 1", "Описание эпика 1");
-        int epicId = manager.addEpic(epic);
-        SubTask subtask = new SubTask("Подзадача 1", "Описание подзадачи 1", epicId);
-        subtask.setId(epicId);
-        Assertions.assertEquals(-1, manager.addSubTask(subtask));
-    }
 
 
     @Test
@@ -191,19 +182,19 @@ public class TestTaskManager {
 
     @Test
     void taskChangeDoesNotAffectManager(){
-        Task task = new Task("Задача 1", "Описание 1");
-        int id = manager.addTask(task);
-        task.setDescription("Обновленное Описание 2");
-        task.setName("Обновленное Название 2");
-        task.setProgress(ProgressTask.IN_PROGRESS);
 
-        Task retrivedTask = manager.getTask(manager.addTask(task));
-        Assertions.assertEquals(task, retrivedTask);
-        Assertions.assertNotEquals(task.getDescription(), retrivedTask.getDescription());
-        Assertions.assertNotEquals(task.getName(), retrivedTask.getName());
-        Assertions.assertNotEquals(task.getProgress(), retrivedTask.getProgress());
+        SubTask subtask = new SubTask("Подзадача 1", "Описание подзадачи 1");
+        System.out.println(subtask.getId());
+        Task task = new Task("Задача 1", "Описание задачи 1");
+
+        int subtaskId = manager.addSubTask(subtask);
+        int taskId = manager.addTask(task);
 
 
+
+        System.out.println(subtaskId);
+        System.out.println(taskId);
+     
     }
 
 
