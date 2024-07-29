@@ -27,6 +27,13 @@ public class Task {
         this.progress = progress;
     }
 
+    public Task(Task task) {
+        this.id = task.id;
+        this.name = task.name;
+        this.description = task.description;
+        this.progress = task.progress;
+    }
+
 
     public String getDescription() {
         return description;

@@ -47,7 +47,8 @@ public class InMemoryTaskManager implements TaskManager {
     public int addTask(Task task) {
         int id = ++generatorId;
         task.setId(id);
-        tasks.put(id, task);
+        final Task newTask = new Task(task);
+        tasks.put(newTask.getId(), newTask);
         return id;
     }
 
@@ -56,10 +57,10 @@ public class InMemoryTaskManager implements TaskManager {
         if (epics.containsKey(epic.getId())) {
             return -1;
         }
-
         int id = ++generatorId;
         epic.setId(id);
-        epics.put(id, epic);
+        final Epic newEpic = new Epic(epic);
+        epics.put(newEpic.getId(), newEpic);
         return id;
     }
 
@@ -68,24 +69,21 @@ public class InMemoryTaskManager implements TaskManager {
     public int addSubTask(SubTask subTask) {
         int idEpicTask = subTask.getIdEpic();
         int idSubTask = subTask.getId();
-
-        if (idEpicTask == idSubTask) {
-            return -1;
-        }
-
         Epic epic = epics.get(idEpicTask);
-
         // Генерация нового идентификатора для подзадачи
         int id = ++generatorId;
         subTask.setId(id);
+        if (idEpicTask == idSubTask) {
+            return -1;
+        }
         // Добавление подзадачи в список подзадач эпика
         epic.getSubTasks().add(id);
         subTask.setEpic(epic);
         // Добавление подзадачи в хранилище подзадач
-        subTasks.put(id, subTask);
+        final SubTask newSubTask = new SubTask(subTask);
+        subTasks.put(newSubTask.getId(), newSubTask);
         // Обновление статуса эпика
         updateEpicStatus(idEpicTask);
-
         return id;
     }
 

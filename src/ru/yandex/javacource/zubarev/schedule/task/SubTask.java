@@ -9,6 +9,11 @@ public class SubTask extends Task {
         this.epicId = idEpicTask;
     }
 
+    public SubTask(SubTask subTask) {
+        super(subTask);
+        this.epicId = subTask.epicId;
+    }
+
     public SubTask(String descriptionTask, String nameTask) {
         super(descriptionTask, nameTask);
     }

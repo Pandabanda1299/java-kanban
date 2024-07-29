@@ -180,23 +180,20 @@ public class TestTaskManager {
         Assertions.assertEquals(0, manager.getSubTasks().size());
     }
 
+
     @Test
     void taskChangeDoesNotAffectManager(){
-
-        SubTask subtask = new SubTask("Подзадача 1", "Описание подзадачи 1");
-        System.out.println(subtask.getId());
+        Epic epic = new Epic("1", "2");
+        int epicId = manager.addEpic(epic);
+        SubTask subtask = new SubTask("Подзадача 1", "Описание подзадачи 1", epicId);
         Task task = new Task("Задача 1", "Описание задачи 1");
-
         int subtaskId = manager.addSubTask(subtask);
         int taskId = manager.addTask(task);
+        subtask.setId(293);
 
+        Assertions.assertNotEquals(subtask, manager.getSubTask(subtaskId));
 
-
-        System.out.println(subtaskId);
-        System.out.println(taskId);
-     
     }
-
 
 
 }
