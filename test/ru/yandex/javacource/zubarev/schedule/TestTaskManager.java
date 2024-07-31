@@ -132,7 +132,9 @@ public class TestTaskManager {
 
     @Test
     public void savingSubTaskWhenChanging() {
-        SubTask task1 = new SubTask("Подзадача 1", "Описание 1");
+        Epic task1488 = new Epic("Эпик 1", "Описание 1");
+        manager.addEpic(task1488);
+        SubTask task1 = new SubTask("Подзадача 1", "Описание 1", task1488.getId());
         int id = manager.addSubTask(task1);
         manager.getSubTask(id);
         List<Task> savedTasks = manager.getHistory();

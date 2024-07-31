@@ -17,8 +17,8 @@ public class InMemoryTaskManager implements TaskManager {
     private final HashMap<Integer, Epic> epics = new HashMap<>();
     private static int generatorId = 0;
     private final HistoryManager historyManager = Managers.getDefaultHistory();
-    private HistoryNode head;
-    private HistoryNode tail;
+    private Node head;
+    private Node tail;
 
 
     @Override

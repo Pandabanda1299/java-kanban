@@ -5,28 +5,26 @@ import ru.yandex.javacource.zubarev.schedule.task.Task;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class InMemoryHistoryManager implements HistoryManager {
 
-    private final HashMap<Integer, HistoryNode> taskMap = new HashMap<>();
-    private HistoryNode head;
-    private HistoryNode tail;
+    private final Map<Integer, Node<Task>> History = new HashMap<>();
+    private Node<Task> head;
+    private Node<Task> tail;
 
 
     @Override
     public void add(Task task) {
 
-        if (task == null) {
-            return;
-        }
-        if (taskMap.containsKey(task.getId())) {
-            removeNode(taskMap.get(task.getId()));
+        if (History.containsKey(task.getId())) {
+            removeNode(History.remove(task.getId()));
         }
         linkLast(task);
-        taskMap.put(task.getId(), tail);
+        History.put(task.getId(), tail);
     }
 
-    private void removeNode(HistoryNode node) {
+    private void removeNode(Node node) {
         if (node.prev != null) {
             node.prev.next = node.next;
         } else {
@@ -44,7 +42,7 @@ public class InMemoryHistoryManager implements HistoryManager {
     @Override
     public List<Task> getHistory() {
         List<Task> history = new ArrayList<>();
-        HistoryNode current = head;
+        Node<Task> current = head;
         while (current != null) {
             history.add(current.task);
             current = current.next;
@@ -54,26 +52,37 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public void remove(int id) {
-        HistoryNode node = taskMap.get(id);
-        if (node != null) {
-            removeNode(node);
-            taskMap.remove(id);
+        final Node node = History.remove(id);
+        if (node == null) {
+            return;
         }
+        removeNode(node);
     }
 
+//        private void linkLast (Task task){
+//            Node node = new Node(task);
+//            if (tail == null) {
+//                head = node;
+//                tail = node;
+//            } else {
+//                tail.next = node;
+//                node.prev = tail;
+//                tail = node;
+//            }
+//        }
+
     private void linkLast(Task task) {
-        HistoryNode node = new HistoryNode(task);
-        if (tail == null) {
+        final Node<Task> node = new Node<Task>(tail, task, null);
+        if (head == null) {
             head = node;
-            tail = node;
         } else {
             tail.next = node;
-            node.prev = tail;
-            tail = node;
         }
+        tail = node;
     }
 
 
 }
+
 
 
