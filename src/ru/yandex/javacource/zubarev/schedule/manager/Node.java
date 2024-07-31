@@ -1,6 +1,8 @@
 package ru.yandex.javacource.zubarev.schedule.manager;
 
-public class Node<Task> {
+import ru.yandex.javacource.zubarev.schedule.task.Task;
+
+public class Node<T> {
     Task task;
     Node<Task> prev;
     Node<Task> next;
