@@ -26,6 +26,12 @@ public class Epic extends Task {
     }
 
 
+    public Epic(Epic epic) {
+        super(epic);
+        this.subTasks = epic.subTasks;
+    }
+
+
     @Override
     public String toString() {
         return "Epic{" +

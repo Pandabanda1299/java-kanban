@@ -21,11 +21,17 @@ public class Task {
         this.id = id;
     }
 
-    public Task(String description, String name, int id, ProgressTask progress) {
+    public Task(String description, String name, ProgressTask progress) {
         this.description = description;
         this.name = name;
-        this.id = id;
         this.progress = progress;
+    }
+
+    public Task(Task task) {
+        this.id = task.id;
+        this.name = task.name;
+        this.description = task.description;
+        this.progress = task.progress;
     }
 
 
@@ -71,14 +77,6 @@ public class Task {
                 '}';
     }
 
-
-//    @Override
-//    public boolean equals(Object o) {
-//        if (this == o) return true;
-//        if (o == null || getClass() != o.getClass()) return false;
-//        Task task = (Task) o;
-//        return id == task.id && Objects.equals(name, task.name) && Objects.equals(description, task.description) && progress == task.progress;
-//    }
 
     @Override
     public boolean equals(Object obj) {

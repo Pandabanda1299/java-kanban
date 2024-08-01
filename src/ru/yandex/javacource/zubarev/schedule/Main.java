@@ -7,8 +7,6 @@ import ru.yandex.javacource.zubarev.schedule.task.ProgressTask;
 import ru.yandex.javacource.zubarev.schedule.task.SubTask;
 import ru.yandex.javacource.zubarev.schedule.task.Task;
 
-import java.util.List;
-
 public class Main {
 
     public static void main(String[] args) {
@@ -53,7 +51,6 @@ public class Main {
         Task retrievedTask = taskManager.getTask(taskId1);
         Epic retrievedEpic = taskManager.getEpic(epicId1);
         SubTask retrievedSubtask = taskManager.getSubTask(subtaskId1);
-
 
 
         // Удалить задачу и эпик

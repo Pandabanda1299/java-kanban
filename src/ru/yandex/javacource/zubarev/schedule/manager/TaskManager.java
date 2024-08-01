@@ -43,6 +43,4 @@ public interface TaskManager {
 
     ArrayList<SubTask> getTasks(Epic epic);
 
-
-
 }

@@ -2,15 +2,14 @@ package ru.yandex.javacource.zubarev.schedule;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import ru.yandex.javacource.zubarev.schedule.manager.HistoryManager;
+import ru.yandex.javacource.zubarev.schedule.manager.InMemoryTaskManager;
+import ru.yandex.javacource.zubarev.schedule.manager.Managers;
+import ru.yandex.javacource.zubarev.schedule.manager.TaskManager;
 import ru.yandex.javacource.zubarev.schedule.task.Epic;
 import ru.yandex.javacource.zubarev.schedule.task.ProgressTask;
 import ru.yandex.javacource.zubarev.schedule.task.SubTask;
 import ru.yandex.javacource.zubarev.schedule.task.Task;
-import ru.yandex.javacource.zubarev.schedule.manager.TaskManager;
-import ru.yandex.javacource.zubarev.schedule.manager.InMemoryTaskManager;
-import ru.yandex.javacource.zubarev.schedule.manager.HistoryManager;
-import ru.yandex.javacource.zubarev.schedule.manager.Managers;
-
 
 import java.util.List;
 
@@ -42,17 +41,6 @@ public class TestTaskManager {
 
         assertNotNull(savedSubTask, "Подзадача не найдена.");
         assertEquals(subtask, savedSubTask, "Созданная подзадача не совпадает с сохраненной.");
-    }
-
-
-    @Test
-    public void addingAnEpicToYourself() {
-
-        Epic epic = new Epic("Эпик 1", "Описание эпика 1");
-        int epicId = manager.addEpic(epic);
-        SubTask subtask = new SubTask("Подзадача 1", "Описание подзадачи 1", epicId);
-        subtask.setId(epicId);
-        Assertions.assertEquals(-1, manager.addSubTask(subtask));
     }
 
 
@@ -120,7 +108,7 @@ public class TestTaskManager {
         manager.getTask(id);
         List<Task> tasks = manager.getHistory();
         Task savedTask = tasks.get(0);
-        Task task2 = new Task("Задача 1", "Обновленное Описание 1", id, ProgressTask.IN_PROGRESS);
+        Task task2 = new Task("Задача 1", "Обновленное Описание 1", ProgressTask.IN_PROGRESS);
         manager.updateTask(task2);
         List<Task> updatedTasks = manager.getHistory();
         Task updatedTask = updatedTasks.get(0);
@@ -144,7 +132,9 @@ public class TestTaskManager {
 
     @Test
     public void savingSubTaskWhenChanging() {
-        SubTask task1 = new SubTask("Подзадача 1", "Описание 1");
+        Epic task1488 = new Epic("Эпик 1", "Описание 1");
+        manager.addEpic(task1488);
+        SubTask task1 = new SubTask("Подзадача 1", "Описание 1", task1488.getId());
         int id = manager.addSubTask(task1);
         manager.getSubTask(id);
         List<Task> savedTasks = manager.getHistory();
@@ -156,4 +146,53 @@ public class TestTaskManager {
         assertEquals(savedTask, updatedTask);
 
     }
+
+
+    @Test
+    public void shouldReturnEpic() {
+        Epic epic = new Epic("Эпик 1", "Описание эпика 1");
+        int epicId = manager.addEpic(epic);
+        Epic savedEpic = manager.getEpic(epicId);
+        assertEquals(epic, savedEpic, "Созданный эпик не совпадает с сохраненным.");
+    }
+
+
+    @Test
+    void shouldRemoveSubtask() {
+        Epic epic = new Epic("Эпик 1", "Описание эпика 1");
+        int epicId = manager.addEpic(epic);
+        SubTask subtask = new SubTask("Подзадача 1", "Описание подзадачи 1", epicId);
+        int subtaskId = manager.addSubTask(subtask);
+        manager.deleteSubtask(subtaskId);
+        System.out.println(manager.getSubTasks());
+        Assertions.assertEquals(0, manager.getTasks(epic).size());
+
+    }
+
+    @Test
+    void epicallyDeleteSubtask() {
+        Epic epic = new Epic("Эпик 1", "Описание эпика 1");
+        int epicId = manager.addEpic(epic);
+        SubTask subtask = new SubTask("Подзадача 1", "Описание подзадачи 1", epicId);
+        int subtaskId = manager.addSubTask(subtask);
+        manager.deleteSubtask(subtaskId);
+        Assertions.assertEquals(0, manager.getSubTasks().size());
+    }
+
+
+    @Test
+    void taskChangeDoesNotAffectManager() {
+        Epic epic = new Epic("1", "2");
+        int epicId = manager.addEpic(epic);
+        SubTask subtask = new SubTask("Подзадача 1", "Описание подзадачи 1", epicId);
+        Task task = new Task("Задача 1", "Описание задачи 1");
+        int subtaskId = manager.addSubTask(subtask);
+        int taskId = manager.addTask(task);
+        subtask.setId(293);
+
+        Assertions.assertNotEquals(subtask, manager.getSubTask(subtaskId));
+
+    }
+
+
 }
