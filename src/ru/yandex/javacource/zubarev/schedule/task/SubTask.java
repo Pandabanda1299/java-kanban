@@ -19,6 +19,11 @@ public class SubTask extends Task {
         super(descriptionTask, nameTask);
     }
 
+    public SubTask(int id, String name, String description, ProgressTask progress, int epicId) {
+        super(id, name, description, progress);
+        this.epicId = epicId;
+    }
+
 
     public void setEpic(Epic epic) {
         this.epicId = epic.getId();
@@ -42,6 +47,7 @@ public class SubTask extends Task {
                 "', idEpicTask=" + epicId +
                 ", progressTask=" + getProgress() +
                 ", idSubTask=" + getId() +
+                ", taskType = " + TaskType.SUBTASK +
                 '}';
     }
 }

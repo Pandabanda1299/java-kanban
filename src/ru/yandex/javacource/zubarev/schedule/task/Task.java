@@ -34,6 +34,13 @@ public class Task {
         this.progress = task.progress;
     }
 
+    public Task(int id, String name, String description, ProgressTask progress) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.progress = progress;
+    }
+
 
     public String getDescription() {
         return description;
@@ -69,11 +76,12 @@ public class Task {
 
     @Override
     public String toString() {
-        return "Task{" +
-                "description='" + description + '\'' +
-                ", id=" + id +
-                ", name='" + name + '\'' +
-                ", progress=" + progress +
+        return "Task { " +
+                "description ='" + description + '\'' +
+                ", id = " + id +
+                ", name ='" + name + '\'' +
+                ", progress = " + progress +
+                ", taskType = " + TaskType.TASK +
                 '}';
     }
 
@@ -98,4 +106,5 @@ public class Task {
     public int hashCode() {
         return Objects.hash(id, name, description, progress);
     }
+
 }
