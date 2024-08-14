@@ -7,6 +7,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
 
@@ -14,12 +15,19 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     public FileBackedTaskManager(String fileName) {
         super();
+        this.fileName = fileName;
 
+        File file = new File(fileName);
+        try {
+            if (!file.exists()) {
+                file.createNewFile(); // Создаём файл, если его нет
+            }
+        } catch (IOException e) {
+            e.printStackTrace(); // Обработка исключений
+        }
     }
 
-    public static FileBackedTaskManager loadFromFile(File file) {
-        return null;
-    }
+
 
     @Override
     public ArrayList<SubTask> getTasks(Epic epic) {
@@ -106,10 +114,10 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         return super.getHistory();
     }
 
-    public void save() {
+    @Override
+    public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("id,type,name,status,description,epic\n");
-
 
         for (Task task : tasks.values()) {
             String type;
@@ -133,16 +141,21 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                     .append(task.getDescription()).append(",")
                     .append(epic).append("\n");
         }
+        return sb.toString(); // исправлено: возвращаем строку вместо null
+    }
 
 
+
+    public void save() {
         try (FileWriter writer = new FileWriter(fileName)) {
-            writer.write(sb.toString());
+            writer.write(this.toString());
         } catch (IOException e) {
             e.printStackTrace();
-
         }
-
     }
+
+
+
 
     public static Task fromString(String value) {
         String[] parts = value.split(",");
@@ -165,11 +178,36 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                     }
                 }
                 return new Epic(id, name, description, progress, subTasks);
-            case SUBTASK:
+             case SUBTASK:
                 int epicId = Integer.parseInt(parts[5]);
                 return new SubTask(id, name, description, progress, epicId);
             default:
                 throw new IllegalArgumentException("Invalid task type: " + type);
+        }
+    }
+
+
+    public static FileBackedTaskManager loadFromFile(File file) {
+        FileBackedTaskManager manager = new FileBackedTaskManager(file.getName());
+        try (Scanner scanner = new Scanner(file)) {
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                Task task = fromString(line);
+                manager.addTaskBasedOnType(task);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return manager;
+    }
+
+    private void addTaskBasedOnType(Task task) {
+        if (task instanceof Epic) {
+            addEpic((Epic) task);
+        } else if (task instanceof SubTask) {
+            addSubTask((SubTask) task);
+        } else {
+            addTask(task);
         }
     }
 
