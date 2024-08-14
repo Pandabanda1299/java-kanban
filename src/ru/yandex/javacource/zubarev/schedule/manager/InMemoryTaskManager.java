@@ -41,17 +41,34 @@ public class InMemoryTaskManager implements TaskManager {
         return new ArrayList<>(this.tasks.values());
     }
 
+//    @Override
+//    public int addTask(Task task) {
+//        int id = ++generatorId;
+//        task.setId(id);
+//        final Task newTask = new Task(task);
+//        tasks.put(newTask.getId(), newTask);
+//        return id;
+//    }
+
     @Override
     public int addTask(Task task) {
-        int id = ++generatorId;
-        task.setId(id);
+        if (task.getId() == 0) { // Проверяем, что id не установлен
+            int id = ++generatorId;
+            task.setId(id);
+        }
         final Task newTask = new Task(task);
         tasks.put(newTask.getId(), newTask);
-        return id;
+        return newTask.getId(); // Возвращаем id добавленной задачи
     }
+
 
     @Override
     public int addEpic(Epic epic) {
+        if (epic.getId() == 0){
+            int id = ++generatorId;
+            epic.setId(id);
+        }
+
         if (epics.containsKey(epic.getId())) {
             return -1;
         }
@@ -65,22 +82,27 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public int addSubTask(SubTask subTask) {
+        if(subTask.getId() == 0){
+            int id = ++generatorId;
+            subTask.setId(id);
+        }
+
         int idEpicTask = subTask.getIdEpic();
         int idSubTask = subTask.getId();
         Epic epic = epics.get(idEpicTask);
-        // Генерация нового идентификатора для подзадачи
+
         int id = ++generatorId;
         subTask.setId(id);
         if (idEpicTask == idSubTask) {
             return -1;
         }
-        // Добавление подзадачи в список подзадач эпика
+
         epic.getSubTasks().add(id);
         subTask.setEpic(epic);
-        // Добавление подзадачи в хранилище подзадач
+
         final SubTask newSubTask = new SubTask(subTask);
         subTasks.put(newSubTask.getId(), newSubTask);
-        // Обновление статуса эпика
+
         updateEpicStatus(idEpicTask);
         return id;
     }

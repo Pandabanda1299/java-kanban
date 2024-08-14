@@ -17,14 +17,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         super();
         this.fileName = fileName;
 
-        File file = new File(fileName);
-        try {
-            if (!file.exists()) {
-                file.createNewFile(); // Создаём файл, если его нет
-            }
-        } catch (IOException e) {
-            e.printStackTrace(); // Обработка исключений
-        }
     }
 
 
@@ -114,22 +106,16 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         return super.getHistory();
     }
 
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("id,type,name,status,description,epic\n");
 
         for (Task task : tasks.values()) {
-            String type;
-            if (task instanceof Epic) {
-                type = "EPIC";
-            } else if (task instanceof SubTask) {
-                type = "SUBTASK";
-            } else {
-                type = "TASK";
-            }
-
+            String type = task instanceof Epic ? "EPIC" : task instanceof SubTask ? "SUBTASK" : "TASK";
             String epic = "";
+
             if (type.equals("SUBTASK")) {
                 epic = String.valueOf(((SubTask) task).getIdEpic());
             }
@@ -141,7 +127,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                     .append(task.getDescription()).append(",")
                     .append(epic).append("\n");
         }
-        return sb.toString(); // исправлено: возвращаем строку вместо null
+        return sb.toString();
     }
 
 
@@ -188,8 +174,12 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
 
     public static FileBackedTaskManager loadFromFile(File file) {
+        if (file == null || !file.exists()) {
+            throw new IllegalArgumentException("File is null or does not exist.");
+        }
         FileBackedTaskManager manager = new FileBackedTaskManager(file.getName());
         try (Scanner scanner = new Scanner(file)) {
+            scanner.nextLine();
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
                 Task task = fromString(line);
@@ -201,6 +191,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         return manager;
     }
 
+
     private void addTaskBasedOnType(Task task) {
         if (task instanceof Epic) {
             addEpic((Epic) task);
@@ -210,7 +201,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             addTask(task);
         }
     }
-
 
 
 }
