@@ -1,14 +1,16 @@
 package ru.yandex.javacource.zubarev.schedule;
 
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.yandex.javacource.zubarev.schedule.manager.FileBackedTaskManager;
 import ru.yandex.javacource.zubarev.schedule.task.ProgressTask;
 import ru.yandex.javacource.zubarev.schedule.task.Task;
+
 import java.io.File;
 import java.io.IOException;
-import static org.junit.jupiter.api.Assertions.*;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 
 public class FileBackedTaskManagerTest {
 
@@ -17,8 +19,8 @@ public class FileBackedTaskManagerTest {
 
     @BeforeEach
     public void setUp() throws IOException {
-        file = new File("test_tasks.csv");
-        manager = new FileBackedTaskManager(new File(file.getName()));
+        file = File.createTempFile("test", ".csv");
+        manager = new FileBackedTaskManager(file);
     }
 
     @Test
@@ -33,15 +35,16 @@ public class FileBackedTaskManagerTest {
     }
 
 
-
     @Test
-    public void testToString() {
-        Task task = new Task("Test Task", "Description", ProgressTask.NEW);
+    public void testToString() throws IOException {
+        Task task = new Task("Description", "Test Task", ProgressTask.NEW);
         manager.addTask(task);
-        String expected = "id,type,name,status,description,epic\n" +
-                task.getId() + ",TASK,Test Task,NEW,Description,\n";
+        String expected =
+                task.getId() + ",TASK,Test Task,NEW,Description";
+        String actual = manager.toString(task);
 
-        assertEquals(expected, manager.toString());
+        assertEquals(expected, actual);
     }
+
 
 }

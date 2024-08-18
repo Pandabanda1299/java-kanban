@@ -16,7 +16,7 @@ public class InMemoryTaskManager implements TaskManager {
     protected final HashMap<Integer, SubTask> subTasks = new HashMap<>();
     protected final HashMap<Integer, Epic> epics = new HashMap<>();
     protected static int generatorId = 0;
-    protected final HistoryManager historyManager = Managers.getDefaultHistory();
+    protected final HistoryManager historyManager = new InMemoryHistoryManager();
     protected Node head;
     protected Node tail;
 
@@ -27,7 +27,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public ArrayList<Task> getTasks()    {
+    public ArrayList<Task> getTasks() {
         return new ArrayList<>(this.tasks.values());
     }
 
@@ -44,11 +44,11 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public int addTask(Task task) {
-         int id = ++generatorId;
-         task.setId(id);
-         final Task newTask = new Task(task);
-         tasks.put(newTask.getId(), newTask);
-         return newTask.getId();
+        int id = ++generatorId;
+        task.setId(id);
+        final Task newTask = new Task(task);
+        tasks.put(newTask.getId(), newTask);
+        return newTask.getId();
     }
 
 

@@ -118,30 +118,21 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     private static final String HEADER = "id,type,name,status,description,epic";
 
+
     public static String toString(Task task) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(task.getId()).append(",")
+                .append(task.getType()).append(",")
+                .append(task.getName()).append(",")
+                .append(task.getProgress()).append(",")
+                .append(task.getDescription());
 
-        return task.getId() + "," + task.getType() +
-            "," + task.getName() + "," + task.getProgress() +
-            "," + task.getDescription() +
-            "," + (task.getType().equals(TaskType.SUBTASK) ? ((SubTask) task).getIdEpic() : "");
+        if (task.getType().equals(TaskType.SUBTASK)) {
+            sb.append(",").append(((SubTask) task).getIdEpic());
+        }
 
+        return sb.toString();
     }
-
-
-//    public static String toString(Task task) {
-//        StringBuilder sb = new StringBuilder();
-//            sb.append(task.getId()).append(",")
-//            .append(task.getType()).append(",")
-//            .append(task.getName()).append(",")
-//            .append(task.getProgress()).append(",")
-//            .append(task.getDescription());
-//
-//    if (task.getType().equals(TaskType.SUBTASK)) {
-//        sb.append(",").append(((SubTask) task).getIdEpic());
-//    }
-//
-//    return sb.toString();
-//}
 
 
     protected void save() {
@@ -167,7 +158,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 writer.newLine();
             }
 
-            writer.newLine();
         } catch (IOException e) {
             throw new ManagerSaveException("Can't save to file: " + file.getName(), e);
         }
@@ -195,15 +185,13 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                     }
                 }
                 return new Epic(id, name, description, progress, subTasks);
-             case SUBTASK:
+            case SUBTASK:
                 int epicId = Integer.parseInt(parts[5]);
                 return new SubTask(id, name, description, progress, epicId);
             default:
                 throw new IllegalArgumentException("Invalid task type: " + type);
         }
     }
-
-
 
 
     public static FileBackedTaskManager loadFromFile(File file) {

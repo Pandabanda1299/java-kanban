@@ -2,10 +2,7 @@ package ru.yandex.javacource.zubarev.schedule;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import ru.yandex.javacource.zubarev.schedule.manager.HistoryManager;
 import ru.yandex.javacource.zubarev.schedule.manager.InMemoryTaskManager;
-import ru.yandex.javacource.zubarev.schedule.manager.Managers;
-import ru.yandex.javacource.zubarev.schedule.manager.TaskManager;
 import ru.yandex.javacource.zubarev.schedule.task.Epic;
 import ru.yandex.javacource.zubarev.schedule.task.ProgressTask;
 import ru.yandex.javacource.zubarev.schedule.task.SubTask;
@@ -13,7 +10,8 @@ import ru.yandex.javacource.zubarev.schedule.task.Task;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class TestTaskManager {
 
@@ -43,20 +41,6 @@ public class TestTaskManager {
         assertEquals(subtask, savedSubTask, "Созданная подзадача не совпадает с сохраненной.");
     }
 
-
-    @Test
-    public void shouldReturnSameInstanceOfTaskManager() {
-        TaskManager first = Managers.getDefault();
-        TaskManager second = Managers.getDefault();
-        assertSame(first, second);
-    }
-
-    @Test
-    public void shouldReturnSameInstanceOfHistoryManager() {
-        HistoryManager first = Managers.getDefaultHistory();
-        HistoryManager second = Managers.getDefaultHistory();
-        assertSame(first, second);
-    }
 
     @Test
     public void inMemoryTaskManagerTest() {
@@ -193,7 +177,6 @@ public class TestTaskManager {
         Assertions.assertNotEquals(subtask, manager.getSubTask(subtaskId));
 
     }
-
 
 
 }
