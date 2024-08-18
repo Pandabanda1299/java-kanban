@@ -106,13 +106,14 @@ public class Task {
     public int hashCode() {
         return Objects.hash(id, name, description, progress);
     }
-//        ВОЗМОЖНЫЕ ПРАВКИ!!!!!!!
+
     public TaskType getType() {
         if (this instanceof Epic) {
             return TaskType.EPIC;
         } else if (this instanceof SubTask) {
             return TaskType.SUBTASK;
-        } return TaskType.TASK;
+        }
+        return TaskType.TASK;
 
     }
 }
