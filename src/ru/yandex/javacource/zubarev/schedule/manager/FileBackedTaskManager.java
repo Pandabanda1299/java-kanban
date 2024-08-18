@@ -2,23 +2,23 @@ package ru.yandex.javacource.zubarev.schedule.manager;
 
 import ru.yandex.javacource.zubarev.schedule.task.*;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
+import java.util.Map;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
 
+    private final File file;
     private String fileName;
 
-    public FileBackedTaskManager(String fileName) {
-        super();
-        this.fileName = fileName;
-
+    public FileBackedTaskManager(File file) {
+        this.file = file;
     }
-
 
 
     @Override
@@ -44,16 +44,19 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     @Override
     public void updateTask(Task task) {
         super.updateTask(task);
+        save();
     }
 
     @Override
     public void updateSubtask(SubTask subtask) {
         super.updateSubtask(subtask);
+        save();
     }
 
     @Override
     public void updateEpic(Epic epic) {
         super.updateEpic(epic);
+        save();
     }
 
     @Override
@@ -73,17 +76,24 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     @Override
     public int addSubTask(SubTask subTask) {
-        return super.addSubTask(subTask);
+        final int id = super.addSubTask(subTask);
+        save();
+        return id;
     }
+
 
     @Override
     public int addEpic(Epic epic) {
-        return super.addEpic(epic);
+        final int id = super.addEpic(epic);
+        save();
+        return id;
     }
 
     @Override
     public int addTask(Task task) {
-        return super.addTask(task);
+        final int id = super.addTask(task);
+        save();
+        return id;
     }
 
     @Override
@@ -106,41 +116,62 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         return super.getHistory();
     }
 
+    private static final String HEADER = "id,type,name,status,description,epic";
 
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("id,type,name,status,description,epic\n");
+    public static String toString(Task task) {
 
-        for (Task task : tasks.values()) {
-            String type = task instanceof Epic ? "EPIC" : task instanceof SubTask ? "SUBTASK" : "TASK";
-            String epic = "";
+        return task.getId() + "," + task.getType() +
+            "," + task.getName() + "," + task.getProgress() +
+            "," + task.getDescription() +
+            "," + (task.getType().equals(TaskType.SUBTASK) ? ((SubTask) task).getIdEpic() : "");
 
-            if (type.equals("SUBTASK")) {
-                epic = String.valueOf(((SubTask) task).getIdEpic());
+    }
+
+
+//    public static String toString(Task task) {
+//        StringBuilder sb = new StringBuilder();
+//            sb.append(task.getId()).append(",")
+//            .append(task.getType()).append(",")
+//            .append(task.getName()).append(",")
+//            .append(task.getProgress()).append(",")
+//            .append(task.getDescription());
+//
+//    if (task.getType().equals(TaskType.SUBTASK)) {
+//        sb.append(",").append(((SubTask) task).getIdEpic());
+//    }
+//
+//    return sb.toString();
+//}
+
+
+    protected void save() {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+            writer.write(HEADER);
+            writer.newLine();
+
+            for (Map.Entry<Integer, Task> entry : tasks.entrySet()) {
+                final Task task = entry.getValue();
+                writer.write(toString(task));
+                writer.newLine();
             }
 
-            sb.append(task.getId()).append(",")
-                    .append(type).append(",")
-                    .append(task.getName()).append(",")
-                    .append(task.getProgress()).append(",")
-                    .append(task.getDescription()).append(",")
-                    .append(epic).append("\n");
-        }
-        return sb.toString();
-    }
+            for (Map.Entry<Integer, SubTask> entry : subTasks.entrySet()) {
+                final Task task = entry.getValue();
+                writer.write(toString(task));
+                writer.newLine();
+            }
 
+            for (Map.Entry<Integer, Epic> entry : epics.entrySet()) {
+                final Task task = entry.getValue();
+                writer.write(toString(task));
+                writer.newLine();
+            }
 
-
-    public void save() {
-        try (FileWriter writer = new FileWriter(fileName)) {
-            writer.write(this.toString());
+            writer.newLine();
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new ManagerSaveException("Can't save to file: " + file.getName(), e);
         }
     }
-
-
 
 
     public static Task fromString(String value) {
@@ -173,32 +204,51 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
 
+
+
     public static FileBackedTaskManager loadFromFile(File file) {
-        if (file == null || !file.exists()) {
-            throw new IllegalArgumentException("File is null or does not exist.");
-        }
-        FileBackedTaskManager manager = new FileBackedTaskManager(file.getName());
-        try (Scanner scanner = new Scanner(file)) {
-            scanner.nextLine();
-            while (scanner.hasNextLine()) {
-                String line = scanner.nextLine();
-                Task task = fromString(line);
-                manager.addTaskBasedOnType(task);
+        final FileBackedTaskManager taskManager = new FileBackedTaskManager(file);
+        try {
+            final String csv = Files.readString(file.toPath());
+            final String[] lines = csv.split(System.lineSeparator());
+            int generatorId = 0;
+            for (int i = 1; i < lines.length; i++) {
+                String line = lines[i];
+                if (line.isEmpty()) {
+                    break;
+                }
+                final Task task = fromString(line);
+                final int id = task.getId();
+                if (id > generatorId) {
+                    generatorId = id;
+                }
+                taskManager.addAnyTask(task);
             }
+            for (Map.Entry<Integer, SubTask> e : taskManager.subTasks.entrySet()) {
+                final SubTask subtask = e.getValue();
+                final Epic epic = taskManager.epics.get(subtask.getIdEpic());
+                epic.getSubTasks().add(subtask.getId());
+            }
+            taskManager.generatorId = generatorId;
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new ManagerSaveException("Can't read form file: " + file.getName(), e);
         }
-        return manager;
+        return taskManager;
     }
 
 
-    private void addTaskBasedOnType(Task task) {
-        if (task instanceof Epic) {
-            addEpic((Epic) task);
-        } else if (task instanceof SubTask) {
-            addSubTask((SubTask) task);
-        } else {
-            addTask(task);
+    protected void addAnyTask(Task task) {
+        final int id = task.getId();
+        switch (task.getType()) {
+            case TASK:
+                tasks.put(id, task);
+                break;
+            case SUBTASK:
+                subTasks.put(id, (SubTask) task);
+                break;
+            case EPIC:
+                epics.put(id, (Epic) task);
+                break;
         }
     }
 

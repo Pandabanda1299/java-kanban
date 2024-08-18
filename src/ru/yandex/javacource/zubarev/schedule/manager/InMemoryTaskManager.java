@@ -12,13 +12,13 @@ import java.util.Map;
 
 public class InMemoryTaskManager implements TaskManager {
 
-    public final Map<Integer, Task> tasks = new HashMap<>();
-    private final HashMap<Integer, SubTask> subTasks = new HashMap<>();
-    private final HashMap<Integer, Epic> epics = new HashMap<>();
-    private static int generatorId = 0;
-    private final HistoryManager historyManager = Managers.getDefaultHistory();
-    private Node head;
-    private Node tail;
+    protected final Map<Integer, Task> tasks = new HashMap<>();
+    protected final HashMap<Integer, SubTask> subTasks = new HashMap<>();
+    protected final HashMap<Integer, Epic> epics = new HashMap<>();
+    protected static int generatorId = 0;
+    protected final HistoryManager historyManager = Managers.getDefaultHistory();
+    protected Node head;
+    protected Node tail;
 
 
     @Override
@@ -27,7 +27,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public ArrayList<Task> getTasks() {
+    public ArrayList<Task> getTasks()    {
         return new ArrayList<>(this.tasks.values());
     }
 
@@ -41,24 +41,14 @@ public class InMemoryTaskManager implements TaskManager {
         return new ArrayList<>(this.tasks.values());
     }
 
-//    @Override
-//    public int addTask(Task task) {
-//        int id = ++generatorId;
-//        task.setId(id);
-//        final Task newTask = new Task(task);
-//        tasks.put(newTask.getId(), newTask);
-//        return id;
-//    }
 
     @Override
     public int addTask(Task task) {
-        if (task.getId() == 0) { // Проверяем, что id не установлен
-            int id = ++generatorId;
-            task.setId(id);
-        }
-        final Task newTask = new Task(task);
-        tasks.put(newTask.getId(), newTask);
-        return newTask.getId(); // Возвращаем id добавленной задачи
+         int id = ++generatorId;
+         task.setId(id);
+         final Task newTask = new Task(task);
+         tasks.put(newTask.getId(), newTask);
+         return newTask.getId();
     }
 
 

@@ -1,26 +1,18 @@
 package ru.yandex.javacource.zubarev.schedule.manager;
 
+import java.io.File;
+
 public class Managers {
 
-    private static TaskManager defaultTaskManager;
-    private static HistoryManager defaultHistoryManager;
-
     public static TaskManager getDefault() {
-        if (defaultTaskManager == null) {
-            defaultTaskManager = new InMemoryTaskManager();
-        }
-        return defaultTaskManager;
+        return new FileBackedTaskManager(new File("resources/task.csv"));
     }
-
 
     public static HistoryManager getDefaultHistory() {
-        if (defaultHistoryManager == null) {
-            defaultHistoryManager = new InMemoryHistoryManager();
-        }
-        return defaultHistoryManager;
+        return new InMemoryHistoryManager();
     }
-
-
 }
+
+
 
 
