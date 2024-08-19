@@ -14,7 +14,7 @@ import java.util.Map;
 public class FileBackedTaskManager extends InMemoryTaskManager {
 
     private final File file;
-    private String fileName;
+
 
     public FileBackedTaskManager(File file) {
         this.file = file;
@@ -22,23 +22,21 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
 
     @Override
-    public ArrayList<SubTask> getTasks(Epic epic) {
-        return super.getTasks(epic);
-    }
-
-    @Override
     public void deleteSubtask(int id) {
         super.deleteSubtask(id);
+        save();
     }
 
     @Override
     public void deleteEpic(int id) {
         super.deleteEpic(id);
+        save();
     }
 
     @Override
     public void deleteTask(int id) {
         super.deleteTask(id);
+        save();
     }
 
     @Override
@@ -59,20 +57,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         save();
     }
 
-    @Override
-    public SubTask getSubTask(int id) {
-        return super.getSubTask(id);
-    }
-
-    @Override
-    public Epic getEpic(int id) {
-        return super.getEpic(id);
-    }
-
-    @Override
-    public Task getTask(int id) {
-        return super.getTask(id);
-    }
 
     @Override
     public int addSubTask(SubTask subTask) {
@@ -96,25 +80,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         return id;
     }
 
-    @Override
-    public ArrayList<Task> getSubTasks() {
-        return super.getSubTasks();
-    }
-
-    @Override
-    public ArrayList<Task> getEpics() {
-        return super.getEpics();
-    }
-
-    @Override
-    public ArrayList<Task> getTasks() {
-        return super.getTasks();
-    }
-
-    @Override
-    public List<Task> getHistory() {
-        return super.getHistory();
-    }
 
     private static final String HEADER = "id,type,name,status,description,epic";
 
