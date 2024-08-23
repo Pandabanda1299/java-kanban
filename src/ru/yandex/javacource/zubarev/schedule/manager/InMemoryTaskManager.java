@@ -12,13 +12,11 @@ import java.util.Map;
 
 public class InMemoryTaskManager implements TaskManager {
 
-    private final Map<Integer, Task> tasks = new HashMap<>();
-    private final HashMap<Integer, SubTask> subTasks = new HashMap<>();
-    private final HashMap<Integer, Epic> epics = new HashMap<>();
-    private static int generatorId = 0;
-    private final HistoryManager historyManager = Managers.getDefaultHistory();
-    private Node head;
-    private Node tail;
+    protected final Map<Integer, Task> tasks = new HashMap<>();
+    protected final Map<Integer, SubTask> subTasks = new HashMap<>();
+    protected final Map<Integer, Epic> epics = new HashMap<>();
+    protected static int generatorId = 0;
+    protected final HistoryManager historyManager = new InMemoryHistoryManager();
 
 
     @Override
@@ -41,17 +39,24 @@ public class InMemoryTaskManager implements TaskManager {
         return new ArrayList<>(this.tasks.values());
     }
 
+
     @Override
     public int addTask(Task task) {
         int id = ++generatorId;
         task.setId(id);
         final Task newTask = new Task(task);
         tasks.put(newTask.getId(), newTask);
-        return id;
+        return newTask.getId();
     }
+
 
     @Override
     public int addEpic(Epic epic) {
+        if (epic.getId() == 0) {
+            int id = ++generatorId;
+            epic.setId(id);
+        }
+
         if (epics.containsKey(epic.getId())) {
             return -1;
         }
@@ -65,22 +70,27 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public int addSubTask(SubTask subTask) {
+        if (subTask.getId() == 0) {
+            int id = ++generatorId;
+            subTask.setId(id);
+        }
+
         int idEpicTask = subTask.getIdEpic();
         int idSubTask = subTask.getId();
         Epic epic = epics.get(idEpicTask);
-        // Генерация нового идентификатора для подзадачи
+
         int id = ++generatorId;
         subTask.setId(id);
         if (idEpicTask == idSubTask) {
             return -1;
         }
-        // Добавление подзадачи в список подзадач эпика
+
         epic.getSubTasks().add(id);
         subTask.setEpic(epic);
-        // Добавление подзадачи в хранилище подзадач
+
         final SubTask newSubTask = new SubTask(subTask);
         subTasks.put(newSubTask.getId(), newSubTask);
-        // Обновление статуса эпика
+
         updateEpicStatus(idEpicTask);
         return id;
     }
