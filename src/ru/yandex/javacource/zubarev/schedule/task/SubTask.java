@@ -1,5 +1,7 @@
 package ru.yandex.javacource.zubarev.schedule.task;
 
+import java.time.LocalDateTime;
+
 public class SubTask extends Task {
 
     private int epicId;
@@ -12,6 +14,13 @@ public class SubTask extends Task {
     public SubTask(SubTask subTask) {
         super(subTask);
         this.epicId = subTask.epicId;
+    }
+
+    public SubTask(String name, String description, ProgressTask progress, int epicId, Duration duration, LocalDateTime startTime) {
+        super(name, description, progress);
+        this.epicId = epicId;
+        setDuration(duration);
+        setStartTime(startTime);
     }
 
 
@@ -33,6 +42,12 @@ public class SubTask extends Task {
         return epicId;
     }
 
+    public void updateEpic(Epic epic) {
+        if (epic != null) {
+            epic.updateTimeAndDuration();
+        }
+    }
+
 
     public void setIdEpicTask(int idEpicTask) {
         this.epicId = idEpicTask;
@@ -48,6 +63,8 @@ public class SubTask extends Task {
                 ", progressTask=" + getProgress() +
                 ", idSubTask=" + getId() +
                 ", taskType = " + TaskType.SUBTASK +
+                ", duration=" + getDuration() +
+                ", startTime=" + getStartTime() +
                 '}';
     }
 }

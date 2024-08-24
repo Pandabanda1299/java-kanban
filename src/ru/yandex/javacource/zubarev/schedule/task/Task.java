@@ -1,5 +1,6 @@
 package ru.yandex.javacource.zubarev.schedule.task;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Task {
@@ -7,6 +8,9 @@ public class Task {
     private String name;
     private String description;
     private ProgressTask progress;
+    private Duration duration;
+    private LocalDateTime startTime;
+
 
     public Task(String description, String name) {
         this.description = description;
@@ -74,6 +78,30 @@ public class Task {
         this.progress = progress;
     }
 
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public Duration getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Duration duration) {
+        this.duration = duration;
+    }
+
+    public LocalDateTime getEndTime() {
+        if (startTime == null || duration == null) {
+            return null;
+        }
+        return startTime.plusMinutes(duration.getMinutes());
+    }
+
+
     @Override
     public String toString() {
         return "Task { " +
@@ -82,6 +110,8 @@ public class Task {
                 ", name ='" + name + '\'' +
                 ", progress = " + progress +
                 ", taskType = " + TaskType.TASK +
+                ", duration = " + duration +
+                ", startTime = " + startTime +
                 '}';
     }
 

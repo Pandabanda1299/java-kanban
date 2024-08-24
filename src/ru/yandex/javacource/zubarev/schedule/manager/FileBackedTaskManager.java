@@ -7,6 +7,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -90,7 +92,10 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 .append(task.getType()).append(",")
                 .append(task.getName()).append(",")
                 .append(task.getProgress()).append(",")
-                .append(task.getDescription());
+                .append(task.getDescription())
+                .append(task.getStartTime() != null ? "," + task.getStartTime().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME) : "")
+                .append(task.getDuration().getMinutes());
+
 
         if (task.getType().equals(TaskType.SUBTASK)) {
             sb.append(",").append(((SubTask) task).getIdEpic());
@@ -124,7 +129,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             }
 
         } catch (IOException e) {
-            throw new ManagerSaveException("Can't save to file: " + file.getName(), e);
+            throw new ManagerSaveException("Файл нельзя сохранить: " + file.getName(), e);
         }
     }
 
@@ -136,6 +141,9 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         String name = parts[2];
         ProgressTask progress = ProgressTask.valueOf(parts[3]);
         String description = parts[4];
+        Duration duration = new Duration(Integer.parseInt(parts[5]));
+        LocalDateTime startTime = parts[6].isEmpty() ? null : LocalDateTime.parse(parts[6], DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+
 
         switch (type) {
             case TASK:
@@ -154,7 +162,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 int epicId = Integer.parseInt(parts[5]);
                 return new SubTask(id, name, description, progress, epicId);
             default:
-                throw new IllegalArgumentException("Invalid task type: " + type);
+                throw new IllegalArgumentException("Неизвестный тип задачи: " + type);
         }
     }
 
