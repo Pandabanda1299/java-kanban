@@ -123,7 +123,7 @@ public class TestTaskManager {
         manager.getSubTask(id);
         List<Task> savedTasks = manager.getHistory();
         Task savedTask = savedTasks.get(0);
-        SubTask task2 = new SubTask("Подзадача 1", "Обновленное Описание 1");
+        SubTask task2 = new SubTask("Подзадача 1", "Обновленное Описание 1", task1488.getId());
         manager.updateSubtask(task2);
         List<Task> updatedTasks = manager.getHistory();
         Task updatedTask = updatedTasks.get(0);

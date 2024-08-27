@@ -142,7 +142,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         ProgressTask progress = ProgressTask.valueOf(parts[3]);
         String description = parts[4];
         Duration duration = new Duration(Integer.parseInt(parts[5]));
-        LocalDateTime startTime = parts[6].isEmpty() ? null : LocalDateTime.parse(parts[6], DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+        LocalDateTime startTime = parts[6].isEmpty() ? null : LocalDateTime.parse(parts[6],
+                DateTimeFormatter.ISO_LOCAL_DATE_TIME);
 
 
         switch (type) {

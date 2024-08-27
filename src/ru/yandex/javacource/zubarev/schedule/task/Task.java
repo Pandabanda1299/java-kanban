@@ -1,9 +1,10 @@
 package ru.yandex.javacource.zubarev.schedule.task;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
-public class Task {
+public class Task  implements Comparable  <Task> {
     private int id;
     private String name;
     private String description;
@@ -12,30 +13,24 @@ public class Task {
     private LocalDateTime startTime;
 
 
-    public Task(String description, String name) {
-        this.description = description;
-        this.progress = ProgressTask.NEW;
-        this.name = name;
-    }
 
-    public Task(String description, String name, int id) {
+    public Task(String description, int id, String name, ProgressTask progress,Duration duration, LocalDateTime startTime) {
         this.description = description;
-        this.progress = ProgressTask.NEW;
-        this.name = name;
         this.id = id;
-    }
-
-    public Task(String description, String name, ProgressTask progress) {
-        this.description = description;
         this.name = name;
         this.progress = progress;
+        this.duration = duration;
+        this.startTime = startTime;
     }
+
 
     public Task(Task task) {
         this.id = task.id;
         this.name = task.name;
         this.description = task.description;
         this.progress = task.progress;
+        this.startTime = task.startTime;
+        this.duration = task.duration;
     }
 
     public Task(int id, String name, String description, ProgressTask progress) {
@@ -43,6 +38,13 @@ public class Task {
         this.name = name;
         this.description = description;
         this.progress = progress;
+        this.startTime = LocalDateTime.now();
+        this.duration = new Duration(10);
+    }
+
+    public Task(String descriptionTask, String nameTask, ProgressTask progress) {
+        this.description = descriptionTask;
+        this.name = nameTask;
     }
 
 
@@ -102,6 +104,7 @@ public class Task {
     }
 
 
+
     @Override
     public String toString() {
         return "Task { " +
@@ -111,7 +114,7 @@ public class Task {
                 ", progress = " + progress +
                 ", taskType = " + TaskType.TASK +
                 ", duration = " + duration +
-                ", startTime = " + startTime +
+                ", startTime = " + (startTime != null ? getStartTime().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME) : null) +
                 '}';
     }
 
@@ -145,5 +148,10 @@ public class Task {
         }
         return TaskType.TASK;
 
+    }
+
+    @Override
+    public int compareTo(Task o) {
+        return this.startTime.compareTo(o.getStartTime());
     }
 }

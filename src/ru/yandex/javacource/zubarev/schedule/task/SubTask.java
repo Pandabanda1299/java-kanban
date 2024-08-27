@@ -7,7 +7,7 @@ public class SubTask extends Task {
     private int epicId;
 
     public SubTask(String descriptionTask, String nameTask, int idEpicTask) {
-        super(descriptionTask, nameTask);
+        super(descriptionTask, nameTask, ProgressTask.NEW);
         this.epicId = idEpicTask;
     }
 
@@ -24,10 +24,6 @@ public class SubTask extends Task {
     }
 
 
-    public SubTask(String descriptionTask, String nameTask) {
-        super(descriptionTask, nameTask);
-    }
-
     public SubTask(int id, String name, String description, ProgressTask progress, int epicId) {
         super(id, name, description, progress);
         this.epicId = epicId;
@@ -42,11 +38,6 @@ public class SubTask extends Task {
         return epicId;
     }
 
-    public void updateEpic(Epic epic) {
-        if (epic != null) {
-            epic.updateTimeAndDuration();
-        }
-    }
 
 
     public void setIdEpicTask(int idEpicTask) {

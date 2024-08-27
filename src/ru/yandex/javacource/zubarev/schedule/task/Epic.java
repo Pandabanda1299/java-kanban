@@ -3,20 +3,13 @@ package ru.yandex.javacource.zubarev.schedule.task;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 
 
 public class Epic extends Task {
-
-
     private List<Integer> subTasks = new ArrayList<>();
-    private Duration duration;
-    private LocalDateTime startTime;
-    private LocalDateTime endTime;
 
-    public Epic(String descriptionTask, String nameTask) {
-        super(descriptionTask, nameTask);
+    public Epic(String nameTask, String descriptionTask) {
+        super(0, nameTask, descriptionTask, ProgressTask.NEW);
     }
 
     public Epic(int id, String name, String description, ProgressTask progress, List<Integer> subTasks) {
@@ -44,34 +37,15 @@ public class Epic extends Task {
         this.subTasks = epic.subTasks;
     }
 
-    public void updateTimeAndDuration() {
-        List<Integer> subTasks = getSubTasks();
+    public LocalDateTime getStartTime() {
         if (subTasks.isEmpty()) {
-            setDuration(new Duration(0));
-            setStartTime(null);
-            return;
+            return null;
         }
-
-        Optional<LocalDateTime> earliestStart = subTasks.stream()
-                .map(subTasks::getStartTime)
-                .filter(Objects::nonNull)
-                .min(LocalDateTime::compareTo);
-
-        Optional<LocalDateTime> latestEnd = subTasks.stream()
-                .map(SubTask::getEndTime)
-                .filter(Objects::nonNull)
-                .max(LocalDateTime::compareTo);
-
-        int totalMinutes = subTasks.stream()
-                .map(SubTask::getDuration)
-                .filter(Objects::nonNull)
-                .mapToInt(Duration::getMinutes)
-                .sum();
-
-        setStartTime(earliestStart.orElse(null));
-        setDuration(new Duration(totalMinutes));
+        return subTasks.stream()
+                .map(SubTask::getStartTime)
+                .min(LocalDateTime::compareTo)
+                .orElse(null);
     }
-
 
     @Override
     public String toString() {
@@ -90,13 +64,12 @@ public class Epic extends Task {
                     sb.append(subTaskId);
                     isFirst = false;
                 } else {
-                    sb.append(",").append(subTaskId);
+                    sb.
+                            append(",").append(subTaskId);
                 }
             }
         }
 
         return sb.toString();
     }
-
-
 }

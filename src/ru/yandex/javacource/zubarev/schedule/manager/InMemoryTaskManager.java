@@ -5,10 +5,8 @@ import ru.yandex.javacource.zubarev.schedule.task.ProgressTask;
 import ru.yandex.javacource.zubarev.schedule.task.SubTask;
 import ru.yandex.javacource.zubarev.schedule.task.Task;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDateTime;
+import java.util.*;
 
 public class InMemoryTaskManager implements TaskManager {
 
@@ -17,6 +15,7 @@ public class InMemoryTaskManager implements TaskManager {
     protected final Map<Integer, Epic> epics = new HashMap<>();
     protected static int generatorId = 0;
     protected final HistoryManager historyManager = new InMemoryHistoryManager();
+    protected final TreeSet<Task> prioritizedTasks = new TreeSet<>(Comparator.comparing(Task::getId));
 
 
     @Override
@@ -46,6 +45,9 @@ public class InMemoryTaskManager implements TaskManager {
         task.setId(id);
         final Task newTask = new Task(task);
         tasks.put(newTask.getId(), newTask);
+        if (newTask.getStartTime() != null) {
+            prioritizedTasks.add(newTask);
+        }
         return newTask.getId();
     }
 
@@ -64,6 +66,10 @@ public class InMemoryTaskManager implements TaskManager {
         epic.setId(id);
         final Epic newEpic = new Epic(epic);
         epics.put(newEpic.getId(), newEpic);
+        if (epic.getStartTime() != null) {
+            prioritizedTasks.add(epic);
+        }
+
         return id;
     }
 
@@ -232,7 +238,13 @@ public class InMemoryTaskManager implements TaskManager {
             epic.setProgress(ProgressTask.IN_PROGRESS);
         }
     }
-
+    private void updateEpicStartTime(Epic epic) {
+        List<Integer> subtaskIdList = epic.getSubTasks();
+        if (subtaskIdList.isEmpty()) return;
+        int subId = subtaskIdList.getFirst();
+        LocalDateTime startTime = subTasks.get(subId).getStartTime();
+        epic.setStartTime(startTime);
+    }
 
 }
 

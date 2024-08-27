@@ -15,8 +15,8 @@ public class Main {
 
         // Создание задач
 
-        Task task1 = new Task("Описание задачи 1", "Задача 1");
-        Task task2 = new Task("Описание задачи 2", "Задача 2");
+        Task task1 = new Task("Описание задачи 1", "Задача 1", ProgressTask.NEW);
+        Task task2 = new Task("Описание задачи 2", "Задача 2", ProgressTask.NEW);
         int taskId1 = taskManager.addTask(task1);
         int taskId2 = taskManager.addTask(task2);
 
