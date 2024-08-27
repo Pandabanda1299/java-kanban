@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -83,7 +84,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
 
-    private static final String HEADER = "id,type,name,status,description,epic";
+    private static final String HEADER = "id, type, name, status, description, epic, startTime, duration, endTime";
 
 
     public static String toString(Task task) {
@@ -94,7 +95,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 .append(task.getProgress()).append(",")
                 .append(task.getDescription())
                 .append(task.getStartTime() != null ? "," + task.getStartTime().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME) : "")
-                .append(task.getDuration().getMinutes());
+                .append(task.getDuration().toMinutes())
+                .append(task.getEndTime().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
 
 
         if (task.getType().equals(TaskType.SUBTASK)) {
@@ -141,14 +143,18 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         String name = parts[2];
         ProgressTask progress = ProgressTask.valueOf(parts[3]);
         String description = parts[4];
-        Duration duration = new Duration(Integer.parseInt(parts[5]));
-        LocalDateTime startTime = parts[6].isEmpty() ? null : LocalDateTime.parse(parts[6],
-                DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+        int length = parts.length;
+        String startTime = parts[length - 3];
+        String duration = parts[length - 2];
+        String endTime = parts[length - 1];
 
+        LocalDateTime start = LocalDateTime.parse(startTime, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+        Duration durationTask = Duration.ofMinutes(Long.parseLong(duration));
+        LocalDateTime end = LocalDateTime.parse(endTime, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
 
         switch (type) {
             case TASK:
-                return new Task(id, name, description, progress);
+                return new Task(id, name, description, progress, start, durationTask);
 
             case EPIC:
                 List<Integer> subTasks = new ArrayList<>();
@@ -158,10 +164,10 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                         subTasks.add(Integer.parseInt(subTaskId));
                     }
                 }
-                return new Epic(id, name, description, progress, subTasks);
+                return new Epic(id, name, description, progress, subTasks, start, durationTask, end);
             case SUBTASK:
                 int epicId = Integer.parseInt(parts[5]);
-                return new SubTask(id, name, description, progress, epicId);
+                return new SubTask(id, description, name, progress, epicId, durationTask, start);
             default:
                 throw new IllegalArgumentException("Неизвестный тип задачи: " + type);
         }

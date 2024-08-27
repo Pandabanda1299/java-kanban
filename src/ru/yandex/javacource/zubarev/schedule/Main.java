@@ -6,6 +6,8 @@ import ru.yandex.javacource.zubarev.schedule.task.Epic;
 import ru.yandex.javacource.zubarev.schedule.task.ProgressTask;
 import ru.yandex.javacource.zubarev.schedule.task.SubTask;
 import ru.yandex.javacource.zubarev.schedule.task.Task;
+import java.time.Duration;
+import java.time.LocalDateTime;
 
 
 public class Main {
@@ -14,24 +16,28 @@ public class Main {
         TaskManager taskManager = Managers.getDefault();
 
         // Создание задач
-
-        Task task1 = new Task("Описание задачи 1", "Задача 1", ProgressTask.NEW);
-        Task task2 = new Task("Описание задачи 2", "Задача 2", ProgressTask.NEW);
+        Task task1 = new Task(1, "Задача 1", "Описание задачи 1", ProgressTask.NEW);
+        Task task2 = new Task(2, "Задача 2", "Описание задачи 2", ProgressTask.NEW);
         int taskId1 = taskManager.addTask(task1);
         int taskId2 = taskManager.addTask(task2);
 
         // Создание эпика с двумя подзадачами
         Epic epic1 = new Epic("Описание эпика 1", "Эпик 1");
         int epicId1 = taskManager.addEpic(epic1);
-        SubTask subTask1 = new SubTask("Описание подзадачи 1", "Подзадача 1", epicId1);
-        SubTask subTask2 = new SubTask("Описание подзадачи 2", "Подзадача 2", epicId1);
+
+        // Задаем начальные данные для подзадач
+        LocalDateTime start = LocalDateTime.now();
+        Duration durationTask = Duration.ofHours(1);
+
+        SubTask subTask1 = new SubTask(0, "Описание подзадачи 1", "Подзадача 1", ProgressTask.NEW, epicId1, durationTask, start);
+        SubTask subTask2 = new SubTask(0, "Описание подзадачи 2", "Подзадача 2", ProgressTask.NEW, epicId1, durationTask, start);
         int subtaskId1 = taskManager.addSubTask(subTask1);
         int subtaskId2 = taskManager.addSubTask(subTask2);
 
         // Создание эпика с одной подзадачей
         Epic epic2 = new Epic("Описание эпика 2", "Эпик 2");
         int epicId2 = taskManager.addEpic(epic2);
-        SubTask subTask3 = new SubTask("Описание подзадачи 3", "Подзадача 3", epicId2);
+        SubTask subTask3 = new SubTask(0, "Описание подзадачи 3", "Подзадача 3", ProgressTask.NEW, epicId2, durationTask, start);
         int subtaskId3 = taskManager.addSubTask(subTask3);
 
         // Изменить статусы созданных объектов
@@ -53,19 +59,15 @@ public class Main {
         Epic retrievedEpic = taskManager.getEpic(epicId1);
         SubTask retrievedSubtask = taskManager.getSubTask(subtaskId1);
 
-
-        // Удалить задачу и эпик
-        taskManager.deleteTask(taskId2);
-        taskManager.deleteEpic(epicId2);
-        taskManager.deleteSubtask(subtaskId2);
-
         // Вывод информации в консоль
         System.out.println("Задача: " + retrievedTask);
         System.out.println("Эпик: " + retrievedEpic);
         System.out.println("Подзадача: " + retrievedSubtask);
         System.out.println("Подзадачи для эпика: " + subTask1);
 
-
+        // Удалить задачу и эпик
+        taskManager.deleteTask(taskId2);
+        taskManager.deleteEpic(epicId2);
+        taskManager.deleteSubtask(subtaskId2);
     }
-
 }

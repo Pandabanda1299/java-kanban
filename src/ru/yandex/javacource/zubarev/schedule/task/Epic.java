@@ -1,22 +1,32 @@
 package ru.yandex.javacource.zubarev.schedule.task;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class Epic extends Task {
+
+    private LocalDateTime endTime;
     private List<Integer> subTasks = new ArrayList<>();
 
     public Epic(String nameTask, String descriptionTask) {
         super(0, nameTask, descriptionTask, ProgressTask.NEW);
+        this.endTime = LocalDateTime.now();
     }
 
     public Epic(int id, String name, String description, ProgressTask progress, List<Integer> subTasks) {
         super(id, name, description, progress);
         this.subTasks = new ArrayList<>(subTasks);
+        this.endTime = LocalDateTime.now();
     }
 
+    public Epic(int id, String name, String description, ProgressTask progress, List<Integer> subTask, LocalDateTime start, Duration durationTask, LocalDateTime endTime) {
+       super(id, name, description, progress,start, durationTask);
+        this.subTasks = subTask;
+        this.endTime = endTime;
+    }
 
     public List<Integer> getSubTasks() {
         return subTasks;
@@ -24,6 +34,10 @@ public class Epic extends Task {
 
     public void setSubTasks(List<Integer> subTasks) {
         this.subTasks = subTasks;
+    }
+
+    public void setEndTime(LocalDateTime endTime) {
+        this.endTime = endTime;
     }
 
 
@@ -35,17 +49,9 @@ public class Epic extends Task {
     public Epic(Epic epic) {
         super(epic);
         this.subTasks = epic.subTasks;
+        this.endTime = epic.endTime;
     }
 
-    public LocalDateTime getStartTime() {
-        if (subTasks.isEmpty()) {
-            return null;
-        }
-        return subTasks.stream()
-                .map(SubTask::getStartTime)
-                .min(LocalDateTime::compareTo)
-                .orElse(null);
-    }
 
     @Override
     public String toString() {

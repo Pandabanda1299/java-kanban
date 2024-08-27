@@ -1,5 +1,6 @@
 package ru.yandex.javacource.zubarev.schedule.task;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
@@ -39,12 +40,21 @@ public class Task  implements Comparable  <Task> {
         this.description = description;
         this.progress = progress;
         this.startTime = LocalDateTime.now();
-        this.duration = new Duration(10);
+        this.duration = Duration.ofMinutes(0);
     }
 
     public Task(String descriptionTask, String nameTask, ProgressTask progress) {
         this.description = descriptionTask;
         this.name = nameTask;
+    }
+
+    public Task(int id, String name, String description, ProgressTask progress, LocalDateTime start, Duration durationTask) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.progress = progress;
+        this.duration = durationTask;
+        this.startTime = start;
     }
 
 
@@ -100,7 +110,7 @@ public class Task  implements Comparable  <Task> {
         if (startTime == null || duration == null) {
             return null;
         }
-        return startTime.plusMinutes(duration.getMinutes());
+        return startTime.plusMinutes(duration.toMinutes());
     }
 
 

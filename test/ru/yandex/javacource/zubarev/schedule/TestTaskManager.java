@@ -21,7 +21,7 @@ public class TestTaskManager {
 
     @Test
     public void equalityOfTasksWithSameId() {
-        Task task = new Task("Задача 1", "Описание 1");
+        Task task = new Task("Задача 1", "Описание 1", ProgressTask.NEW);
         int id = manager.addTask(task);
         Task savedTask = manager.getTask(id);
         assertNotNull(savedTask, "Задача не найдена.");
@@ -33,7 +33,7 @@ public class TestTaskManager {
         assertNotNull(savedEpic, "Эпик не найден.");
         assertEquals(epic, savedEpic, "Созданный эпик не совпадает с сохраненным.");
 
-        SubTask subtask = new SubTask("Подзадача 1", "Описание подзадачи 1", epicId);
+        SubTask subtask = new SubTask(id, "Подзадача 1", "Описание подзадачи 1", ProgressTask.NEW);
         int subTaskId = manager.addSubTask(subtask);
         SubTask savedSubTask = manager.getSubTask(subTaskId);
 
@@ -56,7 +56,7 @@ public class TestTaskManager {
         assertEquals(epic, savedEpic, "Созданный эпик не совпадает с сохраненным.");
         assertEquals(epicId, epic.getId(), "Идентификатор эпика не совпадает с ожидаемым.");
 
-        SubTask subtask = new SubTask("Подзадача 1", "Описание подзадачи 1", epicId);
+        SubTask subtask = new SubTask(id, "Подзадача 1", "Описание подзадачи 1", ProgressTask.NEW);
         assertNotNull(subtask, "Подзадача не должна быть null.");
         int subtaskId = manager.addSubTask(subtask);
         SubTask savedSubTask = manager.getSubTask(subtaskId);
@@ -118,12 +118,12 @@ public class TestTaskManager {
     public void savingSubTaskWhenChanging() {
         Epic task1488 = new Epic("Эпик 1", "Описание 1");
         manager.addEpic(task1488);
-        SubTask task1 = new SubTask("Подзадача 1", "Описание 1", task1488.getId());
+        SubTask task1 = new SubTask(id, "Подзадача 1", "Описание 1", progress, task1488.getId(), durationTask, start);
         int id = manager.addSubTask(task1);
         manager.getSubTask(id);
         List<Task> savedTasks = manager.getHistory();
         Task savedTask = savedTasks.get(0);
-        SubTask task2 = new SubTask("Подзадача 1", "Обновленное Описание 1", task1488.getId());
+        SubTask task2 = new SubTask(id, "Подзадача 1", "Обновленное Описание 1", progress, task1488.getId(), durationTask, start);
         manager.updateSubtask(task2);
         List<Task> updatedTasks = manager.getHistory();
         Task updatedTask = updatedTasks.get(0);
@@ -145,7 +145,7 @@ public class TestTaskManager {
     void shouldRemoveSubtask() {
         Epic epic = new Epic("Эпик 1", "Описание эпика 1");
         int epicId = manager.addEpic(epic);
-        SubTask subtask = new SubTask("Подзадача 1", "Описание подзадачи 1", epicId);
+        SubTask subtask = new SubTask(id, "Подзадача 1", "Описание подзадачи 1", progress, epicId, durationTask, start);
         int subtaskId = manager.addSubTask(subtask);
         manager.deleteSubtask(subtaskId);
         System.out.println(manager.getSubTasks());
@@ -157,7 +157,7 @@ public class TestTaskManager {
     void epicallyDeleteSubtask() {
         Epic epic = new Epic("Эпик 1", "Описание эпика 1");
         int epicId = manager.addEpic(epic);
-        SubTask subtask = new SubTask("Подзадача 1", "Описание подзадачи 1", epicId);
+        SubTask subtask = new SubTask(id, "Подзадача 1", "Описание подзадачи 1", progress, epicId, durationTask, start);
         int subtaskId = manager.addSubTask(subtask);
         manager.deleteSubtask(subtaskId);
         Assertions.assertEquals(0, manager.getSubTasks().size());
@@ -168,7 +168,7 @@ public class TestTaskManager {
     void taskChangeDoesNotAffectManager() {
         Epic epic = new Epic("1", "2");
         int epicId = manager.addEpic(epic);
-        SubTask subtask = new SubTask("Подзадача 1", "Описание подзадачи 1", epicId);
+        SubTask subtask = new SubTask(id, "Подзадача 1", "Описание подзадачи 1", progress, epicId, durationTask, start);
         Task task = new Task("Задача 1", "Описание задачи 1");
         int subtaskId = manager.addSubTask(subtask);
         int taskId = manager.addTask(task);
