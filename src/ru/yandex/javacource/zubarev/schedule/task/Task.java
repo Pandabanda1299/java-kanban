@@ -46,6 +46,7 @@ public class Task  implements Comparable  <Task> {
     public Task(String descriptionTask, String nameTask, ProgressTask progress) {
         this.description = descriptionTask;
         this.name = nameTask;
+        this.progress = progress;
     }
 
     public Task(int id, String name, String description, ProgressTask progress, LocalDateTime start, Duration durationTask) {

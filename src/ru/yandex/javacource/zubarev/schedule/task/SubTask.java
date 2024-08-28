@@ -10,6 +10,8 @@ public class SubTask extends Task {
     public SubTask(int id, String descriptionTask, String nameTask, ProgressTask progress, int idEpicTask, Duration durationTask, LocalDateTime start) {
         super(descriptionTask, nameTask, ProgressTask.NEW);
         this.epicId = idEpicTask;
+        this.setDuration(durationTask);
+        this.setStartTime(start);
     }
 
     public SubTask(SubTask subTask) {

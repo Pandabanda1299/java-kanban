@@ -1,8 +1,10 @@
 package ru.yandex.javacource.zubarev.schedule;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.yandex.javacource.zubarev.schedule.manager.InMemoryTaskManager;
+import ru.yandex.javacource.zubarev.schedule.manager.TaskManager;
 import ru.yandex.javacource.zubarev.schedule.task.Epic;
 import ru.yandex.javacource.zubarev.schedule.task.ProgressTask;
 import ru.yandex.javacource.zubarev.schedule.task.SubTask;
@@ -13,10 +15,9 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class TestTaskManager {
+abstract class TaskManagerTest<T extends TaskManager> {
+    protected T manager;
 
-
-    InMemoryTaskManager manager = new InMemoryTaskManager();
 
 
     @Test
@@ -33,7 +34,7 @@ public class TestTaskManager {
         assertNotNull(savedEpic, "Эпик не найден.");
         assertEquals(epic, savedEpic, "Созданный эпик не совпадает с сохраненным.");
 
-        SubTask subtask = new SubTask(id, "Подзадача 1", "Описание подзадачи 1", ProgressTask.NEW);
+        SubTask subtask = new SubTask("Подзадача 1", "Описание подзадачи 1", ProgressTask.NEW, epicId);
         int subTaskId = manager.addSubTask(subtask);
         SubTask savedSubTask = manager.getSubTask(subTaskId);
 
