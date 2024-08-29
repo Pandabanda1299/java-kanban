@@ -52,7 +52,6 @@ public class Main {
         System.out.println("Задача: " + taskManager.getTask(taskId1));
         System.out.println("Эпик: " + taskManager.getEpic(epicId1));
         System.out.println("Подзадача: " + taskManager.getSubTask(subtaskId1));
-        System.out.println("Подзадачи для эпика: " + taskManager.getTasks(epic1));
 
         // Удаление задач
         taskManager.deleteTask(taskId2);

@@ -94,8 +94,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 .append(task.getName()).append(",")
                 .append(task.getProgress()).append(",")
                 .append(task.getDescription())
-                .append(task.getStartTime() != null ? "," + task.getStartTime().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME) : "")
-                .append(task.getDuration().toMinutes())
+                .append(task.getStartTime() != null ? "," + task.getStartTime().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME) : "").append(",")
+                .append(task.getDuration().toMinutes()).append(",")
                 .append(task.getEndTime().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
 
 

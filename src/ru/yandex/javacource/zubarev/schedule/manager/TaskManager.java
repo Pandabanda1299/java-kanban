@@ -6,7 +6,7 @@ import ru.yandex.javacource.zubarev.schedule.task.Task;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+
 
 public interface TaskManager {
 
@@ -42,7 +42,5 @@ public interface TaskManager {
 
     void deleteSubtask(int id);
 
-    ArrayList<SubTask> getTasks(Epic epic);
-
-    List<SubTask> getSubTasksForEpic(Map<Integer, SubTask> subTasks, int epicId);
+    List<SubTask> getTasks(int epicId);
 }

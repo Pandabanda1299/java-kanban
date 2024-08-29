@@ -12,12 +12,19 @@ import java.util.stream.Collectors;
 
 public class InMemoryTaskManager implements TaskManager {
 
-    protected final Map<Integer, Task> tasks = new HashMap<>();
-    protected final Map<Integer, SubTask> subTasks = new HashMap<>();
-    protected final Map<Integer, Epic> epics = new HashMap<>();
+    protected final Map<Integer, Task> tasks;
+    protected final Map<Integer, SubTask> subTasks;
+    protected final Map<Integer, Epic> epics;
     protected static int generatorId = 0;
     protected final HistoryManager historyManager = new InMemoryHistoryManager();
     protected final TreeSet<Task> prioritizedTasks = new TreeSet<>(Comparator.comparing(Task::getId));
+
+
+    public InMemoryTaskManager() {
+        tasks = new HashMap<>();
+        subTasks = new HashMap<>();
+        epics = new HashMap<>();
+    }
 
 
     @Override
@@ -249,21 +256,9 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
 
-/// ВЕСЕЛЬЕ ТУТ
-    @Override
-    public ArrayList<SubTask> getTasks(Epic epic) {
-        ArrayList<SubTask> subTasksForEpic = new ArrayList<>();
-        for (SubTask subTask : subTasks.values()) {
-            if (subTask.getIdEpic() == epic.getId()) {
-                subTasksForEpic.add(subTask);
-            }
-        }
-        return subTasksForEpic;
-    }
 
-    /// ВЕСЕЛЬЕ ТУТ
     @Override
-    public List<SubTask> getSubTasksForEpic(Map<Integer, SubTask> subTasks, int epicId) {
+    public List<SubTask> getTasks(int epicId) {
         return subTasks.values().stream()
                 .filter(subTask -> subTask.getIdEpic() == epicId)
                 .collect(Collectors.toList());
