@@ -71,8 +71,7 @@ public class Epic extends Task {
                     sb.append(subTaskId);
                     isFirst = false;
                 } else {
-                    sb.
-                            append(",").append(subTaskId);
+                    sb.append(",").append(subTaskId);
                 }
             }
         }
