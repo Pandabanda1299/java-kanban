@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
-public class Task  implements Comparable  <Task> {
+public class Task implements Comparable<Task> {
     private int id;
     private String name;
     private String description;
@@ -14,8 +14,7 @@ public class Task  implements Comparable  <Task> {
     private LocalDateTime startTime;
 
 
-
-    public Task(String description, int id, String name, ProgressTask progress,Duration duration, LocalDateTime startTime) {
+    public Task(String description, int id, String name, ProgressTask progress, Duration duration, LocalDateTime startTime) {
         this.description = description;
         this.id = id;
         this.name = name;
@@ -113,7 +112,6 @@ public class Task  implements Comparable  <Task> {
         }
         return startTime.plusMinutes(duration.toMinutes());
     }
-
 
 
     @Override

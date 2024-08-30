@@ -24,7 +24,7 @@ public class Epic extends Task {
     }
 
     public Epic(int id, String name, String description, ProgressTask progress, List<Integer> subTasks, LocalDateTime start, Duration durationTask, LocalDateTime endTime) {
-       super(id, name, description, progress,start, durationTask);
+        super(id, name, description, progress, start, durationTask);
         this.endTime = endTime;
         this.subTasks = subTasks;
     }

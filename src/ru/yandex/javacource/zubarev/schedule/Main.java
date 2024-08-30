@@ -3,9 +3,9 @@ package ru.yandex.javacource.zubarev.schedule;
 import ru.yandex.javacource.zubarev.schedule.manager.Managers;
 import ru.yandex.javacource.zubarev.schedule.manager.TaskManager;
 import ru.yandex.javacource.zubarev.schedule.task.Epic;
+import ru.yandex.javacource.zubarev.schedule.task.ProgressTask;
 import ru.yandex.javacource.zubarev.schedule.task.SubTask;
 import ru.yandex.javacource.zubarev.schedule.task.Task;
-import ru.yandex.javacource.zubarev.schedule.task.ProgressTask;
 
 import java.time.Duration;
 import java.time.LocalDateTime;

@@ -1,15 +1,14 @@
 package ru.yandex.javacource.zubarev.schedule;
 
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ru.yandex.javacource.zubarev.schedule.manager.InMemoryTaskManager;
 import ru.yandex.javacource.zubarev.schedule.manager.TaskManager;
 import ru.yandex.javacource.zubarev.schedule.task.Epic;
 import ru.yandex.javacource.zubarev.schedule.task.ProgressTask;
 import ru.yandex.javacource.zubarev.schedule.task.SubTask;
 import ru.yandex.javacource.zubarev.schedule.task.Task;
 
+import java.io.File;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -18,13 +17,14 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public  class TestTaskManager  {
+abstract class TestTaskManager<T extends TaskManager> {
 
-     protected TaskManager manager = new InMemoryTaskManager();
+    T manager;
+    File file;
 
     @Test
     public void equalityOfTasksWithSameId() {
-        Task task = new Task("Задача 1", "Описание 1", ProgressTask.NEW);
+        Task task = new Task(1, "Задача 1", "Описание 1", ProgressTask.NEW, LocalDateTime.now().plusHours(1), Duration.ofMinutes(30));
         int id = manager.addTask(task);
         Task savedTask = manager.getTask(id);
         assertNotNull(savedTask, "Задача не найдена.");
@@ -73,7 +73,7 @@ public  class TestTaskManager  {
         Task task = new Task(1, "Задача 1", "Описание 1", ProgressTask.NEW, LocalDateTime.now(), Duration.ofMinutes(30));
         int id = manager.addTask(task);
         int generatedId = task.getId();
-        manager.updateTask(new Task(1,"Задача 2", "Описание 2", ProgressTask.NEW, LocalDateTime.now(), Duration.ofMinutes(35)));
+        manager.updateTask(new Task(1, "Задача 2", "Описание 2", ProgressTask.NEW, LocalDateTime.now(), Duration.ofMinutes(35)));
         assertEquals(generatedId, task.getId());
     }
 
@@ -143,7 +143,7 @@ public  class TestTaskManager  {
         int subtaskId = manager.addSubTask(subtask);
         manager.deleteSubtask(subtaskId);
         System.out.println(manager.getSubTasks());
-        Assertions.assertEquals(0, manager.getTasks(epicId ).size());
+        Assertions.assertEquals(0, manager.getTasks(epicId).size());
 
     }
 
@@ -151,7 +151,7 @@ public  class TestTaskManager  {
     void epicallyDeleteSubtask() {
         Epic epic = new Epic("Эпик 1", "Описание эпика 1");
         int epicId = manager.addEpic(epic);
-        SubTask subtask = new SubTask(1, "Подзадача 1", "Описание подзадачи 1",ProgressTask.NEW, epicId);
+        SubTask subtask = new SubTask(1, "Подзадача 1", "Описание подзадачи 1", ProgressTask.NEW, epicId);
         int subtaskId = manager.addSubTask(subtask);
         manager.deleteSubtask(subtaskId);
         Assertions.assertEquals(0, manager.getSubTasks().size());

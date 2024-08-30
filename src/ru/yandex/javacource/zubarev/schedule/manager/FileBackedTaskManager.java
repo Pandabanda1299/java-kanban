@@ -87,7 +87,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     private static final String HEADER = "id, type, name, status, description, epic, startTime, duration, endTime";
 
 
-    public static String toString(Task task) {
+    public static String toTaskString(Task task) {
         StringBuilder sb = new StringBuilder();
         sb.append(task.getId()).append(",")
                 .append(task.getType()).append(",")
@@ -114,19 +114,19 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
             for (Map.Entry<Integer, Task> entry : tasks.entrySet()) {
                 final Task task = entry.getValue();
-                writer.write(toString(task));
+                writer.write(toTaskString(task));
                 writer.newLine();
             }
 
             for (Map.Entry<Integer, SubTask> entry : subTasks.entrySet()) {
                 final Task task = entry.getValue();
-                writer.write(toString(task));
+                writer.write(toTaskString(task));
                 writer.newLine();
             }
 
             for (Map.Entry<Integer, Epic> entry : epics.entrySet()) {
                 final Task task = entry.getValue();
-                writer.write(toString(task));
+                writer.write(toTaskString(task));
                 writer.newLine();
             }
 
