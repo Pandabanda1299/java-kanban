@@ -1,30 +1,44 @@
 package ru.yandex.javacource.zubarev.schedule.task;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class Epic extends Task {
 
+    private LocalDateTime endTime;
+    private List<Integer> subTasks;
 
-    private ArrayList<Integer> subTasks = new ArrayList<>();
-
-    public Epic(String descriptionTask, String nameTask) {
-        super(descriptionTask, nameTask);
+    public Epic(String nameTask, String descriptionTask) {
+        super(0, nameTask, descriptionTask, ProgressTask.NEW);
+        this.endTime = LocalDateTime.now();
+        this.subTasks = new ArrayList<>();
     }
 
     public Epic(int id, String name, String description, ProgressTask progress, List<Integer> subTasks) {
         super(id, name, description, progress);
         this.subTasks = new ArrayList<>(subTasks);
+        this.endTime = LocalDateTime.now();
     }
 
+    public Epic(int id, String name, String description, ProgressTask progress, List<Integer> subTasks, LocalDateTime start, Duration durationTask, LocalDateTime endTime) {
+        super(id, name, description, progress, start, durationTask);
+        this.endTime = endTime;
+        this.subTasks = subTasks;
+    }
 
-    public ArrayList<Integer> getSubTasks() {
+    public List<Integer> getSubTasks() {
         return subTasks;
     }
 
-    public void setSubTasks(ArrayList<Integer> subTasks) {
+    public void setSubTasks(List<Integer> subTasks) {
         this.subTasks = subTasks;
+    }
+
+    public void setEndTime(LocalDateTime endTime) {
+        this.endTime = endTime;
     }
 
 
@@ -36,6 +50,7 @@ public class Epic extends Task {
     public Epic(Epic epic) {
         super(epic);
         this.subTasks = epic.subTasks;
+        this.endTime = epic.endTime;
     }
 
 
@@ -48,10 +63,10 @@ public class Epic extends Task {
                 .append(getProgress()).append(",")
                 .append(getDescription()).append(",");
 
-        List<Integer> subTasks = getSubTasks();
-        if (!subTasks.isEmpty()) {
+        List<Integer> subTaskIds = getSubTasks();
+        if (!subTaskIds.isEmpty()) {
             boolean isFirst = true;
-            for (Integer subTaskId : subTasks) {
+            for (Integer subTaskId : subTaskIds) {
                 if (isFirst) {
                     sb.append(subTaskId);
                     isFirst = false;
@@ -63,6 +78,4 @@ public class Epic extends Task {
 
         return sb.toString();
     }
-
-
 }
