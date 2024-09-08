@@ -6,14 +6,20 @@ import com.sun.net.httpserver.HttpServer;
 import ru.yandex.javacource.zubarev.schedule.manager.Managers;
 import ru.yandex.javacource.zubarev.schedule.manager.TaskManager;
 
+import javax.xml.datatype.Duration;
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.time.LocalDateTime;
 
 public class HttpTaskServer  {
     private static final int PORT = 8080;
     private static final TaskManager TASK_MANAGER = Managers.getDefault();
     private final HttpServer httpServer;
-    Gson gson = new GsonBuilder().create();
+    Gson gson = new GsonBuilder()
+            .registerTypeAdapter(Duration.class, new DurationAdapter())
+            .registerTypeAdapter(LocalDateTime.class, new LocalDateAdapter())
+            .create();
+
 
     public HttpTaskServer() throws IOException {
         httpServer = HttpServer.create(new InetSocketAddress("localhost", PORT), 0);
