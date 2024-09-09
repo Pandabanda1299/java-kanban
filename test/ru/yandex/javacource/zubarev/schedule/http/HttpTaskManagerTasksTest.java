@@ -1,12 +1,10 @@
-package ru.yandex.javacource.zubarev.schedule.http;
-
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.AfterEach;
 import ru.yandex.javacource.zubarev.schedule.manager.InMemoryTaskManager;
 import ru.yandex.javacource.zubarev.schedule.manager.TaskManager;
-import ru.yandex.javacource.zubarev.schedule.server.DurationAdapter;
 import ru.yandex.javacource.zubarev.schedule.server.HttpTaskServer;
 import ru.yandex.javacource.zubarev.schedule.task.ProgressTask;
 import ru.yandex.javacource.zubarev.schedule.task.Task;
@@ -29,16 +27,17 @@ public class HttpTaskManagerTasksTest {
     TaskManager manager = new InMemoryTaskManager();
     // передаём его в качестве аргумента в конструктор HttpTaskServer
     HttpTaskServer taskServer = new HttpTaskServer();
-    Gson gson = new Gson();
+    Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
     public HttpTaskManagerTasksTest() throws IOException {
     }
 
     @BeforeEach
-    public void setUp() {
-        manager.deleteTask(0);
+    public void setUp() throws IOException {
+        manager.deleteTask(1);
         manager.deleteSubtask(1);
-        manager.deleteEpic(2);
+        manager.deleteEpic(1);
+        taskServer.start();
     }
 
     @AfterEach
@@ -49,7 +48,7 @@ public class HttpTaskManagerTasksTest {
     @Test
     public void testAddTask() throws IOException, InterruptedException {
         // создаём задачу
-        Task task = new Task(1, "Task 1", "Description", ProgressTask.NEW, LocalDateTime.now(), Duration.ofMinutes(30));
+        Task task = new Task(1, "Test 2", "Test description", ProgressTask.NEW, LocalDateTime.now(), Duration.ofMinutes(30));
         // конвертируем её в JSON
         String taskJson = gson.toJson(task);
 
