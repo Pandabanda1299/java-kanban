@@ -5,7 +5,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.AfterEach;
 import ru.yandex.javacource.zubarev.schedule.manager.InMemoryTaskManager;
 import ru.yandex.javacource.zubarev.schedule.manager.TaskManager;
+import ru.yandex.javacource.zubarev.schedule.server.DurationAdapter;
 import ru.yandex.javacource.zubarev.schedule.server.HttpTaskServer;
+import ru.yandex.javacource.zubarev.schedule.server.LocalDateAdapter;
 import ru.yandex.javacource.zubarev.schedule.task.ProgressTask;
 import ru.yandex.javacource.zubarev.schedule.task.Task;
 
@@ -27,7 +29,12 @@ public class HttpTaskManagerTasksTest {
     TaskManager manager = new InMemoryTaskManager();
     // передаём его в качестве аргумента в конструктор HttpTaskServer
     HttpTaskServer taskServer = new HttpTaskServer();
-    Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    Gson gson = new GsonBuilder()
+            .setPrettyPrinting()
+            .registerTypeAdapter(Duration.class, new DurationAdapter())
+            .registerTypeAdapter(LocalDateTime.class, new LocalDateAdapter())
+            .create();
+
 
     public HttpTaskManagerTasksTest() throws IOException {
     }
