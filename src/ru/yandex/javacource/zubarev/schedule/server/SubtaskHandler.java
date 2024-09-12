@@ -70,7 +70,7 @@ public class SubtaskHandler extends BaseHttpHandler implements HttpHandler {
                 writeResponse(exchange, "Подзадача не должна быть пустой!", 400);
                 return;
             }
-            SubTask existingSubTask = (SubTask) taskManager.getSubTask(subTask.getId());
+            SubTask existingSubTask = taskManager.getSubTask(subTask.getId());
             if (existingSubTask == null) {
                 int newId = taskManager.addSubTask(subTask);
                 writeResponse(exchange, "Подзадача добавлена с id: " + newId, 201);
@@ -88,23 +88,26 @@ public class SubtaskHandler extends BaseHttpHandler implements HttpHandler {
 
 
     private void deleteSubTask(HttpExchange exchange) throws IOException {
-        String query = exchange.getRequestURI().getQuery();
+        String path = exchange.getRequestURI().getPath();
+        String[] ids = path.split("/");
+        int id = 0;
 
-        if (query == null) {
-            writeResponse(exchange, "Не указан id подзадачи", 404);
+        if (ids.length > 2) {
+            id = Integer.parseInt(ids[2]);
+        }
+
+        if (id == 0) {
+            writeResponse(exchange, "Не указан id подзадачи ", 404);
             return;
         }
-        if (getTaskId(exchange).isEmpty()) {
-            writeResponse(exchange, "Не указан id подзадачи", 404);
+
+        if (taskManager.getSubTasks() == null) {
+            writeResponse(exchange, "Задач с таким id " + id + " не найдено!", 404);
             return;
         }
-        int id = getTaskId(exchange).get();
-        if (taskManager.getSubTask(id) == null) {
-            writeResponse(exchange, "Подзадача с id " + id + " не найдена!", 404);
-            return;
-        }
+
         taskManager.deleteSubtask(id);
-        writeResponse(exchange, "Подзадача удалена!", 200);
+        writeResponse(exchange, "Задача удалена!", 200);
     }
 
 }

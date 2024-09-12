@@ -80,21 +80,24 @@ public class TaskHandler extends BaseHttpHandler implements HttpHandler {
     }
 
     private void deleteTask(HttpExchange exchange) throws IOException {
-        String query = exchange.getRequestURI().getQuery();
+        String path = exchange.getRequestURI().getPath();
+        String[] ids = path.split("/");
+        int id = 0;
 
-        if (query == null) {
+        if (ids.length > 2) {
+            id = Integer.parseInt(ids[2]);
+        }
+
+        if (id == 0) {
             writeResponse(exchange, "Не указан id задачи ", 404);
             return;
         }
-        if (getTaskId(exchange).isEmpty()) {
-            writeResponse(exchange, "Не указан id задачи ", 404);
-            return;
-        }
-        int id = getTaskId(exchange).get();
+
         if (taskManager.getTasks(id) == null) {
             writeResponse(exchange, "Задач с таким id " + id + " не найдено!", 404);
             return;
         }
+
         taskManager.deleteTask(id);
         writeResponse(exchange, "Задача удалена!", 200);
     }

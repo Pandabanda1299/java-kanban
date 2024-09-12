@@ -85,23 +85,26 @@ public class EpicHandler extends BaseHttpHandler implements HttpHandler {
     }
 
     private void deleteEpic(HttpExchange exchange) throws IOException {
-        String query = exchange.getRequestURI().getQuery();
+        String path = exchange.getRequestURI().getPath();
+        String[] ids = path.split("/");
+        int id = 0;
 
-        if (query == null) {
-            writeResponse(exchange, "Не указан id эпика", 404);
+        if (ids.length > 2) {
+            id = Integer.parseInt(ids[2]);
+        }
+
+        if (id == 0) {
+            writeResponse(exchange, "Не указан id эпика ", 404);
             return;
         }
-        if (getTaskId(exchange).isEmpty()) {
-            writeResponse(exchange, "Не указан id эпика", 404);
+
+        if (taskManager.getEpics() == null) {
+            writeResponse(exchange, "Задач с таким id " + id + " не найдено!", 404);
             return;
         }
-        int id = getTaskId(exchange).get();
-        if (taskManager.getEpic(id) == null) {
-            writeResponse(exchange, "Эпик с id " + id + " не найден!", 404);
-            return;
-        }
+
         taskManager.deleteEpic(id);
-        writeResponse(exchange, "Эпик удален!", 200);
+        writeResponse(exchange, "Задача удалена!", 200);
     }
 
 }
