@@ -1,13 +1,13 @@
+package ru.yandex.javacource.zubarev.schedule.http;
+
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import ru.yandex.javacource.zubarev.schedule.manager.InMemoryTaskManager;
 import ru.yandex.javacource.zubarev.schedule.manager.TaskManager;
-import ru.yandex.javacource.zubarev.schedule.server.DurationAdapter;
+import ru.yandex.javacource.zubarev.schedule.server.BaseHttpHandler;
 import ru.yandex.javacource.zubarev.schedule.server.HttpTaskServer;
-import ru.yandex.javacource.zubarev.schedule.server.LocalDateAdapter;
 import ru.yandex.javacource.zubarev.schedule.task.ProgressTask;
 import ru.yandex.javacource.zubarev.schedule.task.Task;
 
@@ -28,13 +28,9 @@ public class HttpTaskManagerTasksTest {
     // создаём экземпляр InMemoryTaskManager
     TaskManager manager = new InMemoryTaskManager();
     // передаём его в качестве аргумента в конструктор HttpTaskServer
-    HttpTaskServer taskServer = new HttpTaskServer();
-    Gson gson = new GsonBuilder()
-            .setPrettyPrinting()
-            .registerTypeAdapter(Duration.class, new DurationAdapter())
-            .registerTypeAdapter(LocalDateTime.class, new LocalDateAdapter())
-            .create();
-
+    HttpTaskServer taskServer = new HttpTaskServer(manager);
+    BaseHttpHandler baseHttpHandler = new BaseHttpHandler(manager);
+    Gson gson = baseHttpHandler.getGson();
 
     public HttpTaskManagerTasksTest() throws IOException {
     }
@@ -67,7 +63,7 @@ public class HttpTaskManagerTasksTest {
         // вызываем рест, отвечающий за создание задач
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         // проверяем код ответа
-        assertEquals(200, response.statusCode());
+        assertEquals(201, response.statusCode());
 
         // проверяем, что создалась одна задача с корректным именем
         List<Task> tasksFromManager = manager.getTasks();

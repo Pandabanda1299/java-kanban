@@ -1,31 +1,22 @@
 package ru.yandex.javacource.zubarev.schedule.server;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
 import ru.yandex.javacource.zubarev.schedule.manager.TaskManager;
 import ru.yandex.javacource.zubarev.schedule.task.Task;
 
-import javax.xml.datatype.Duration;
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.List;
 
-public class PrioritizedTasksHandler extends BaseHttpHandler {
-    private final TaskManager taskManager;
-    private final Gson gson;
+public class PrioritizedTasksHandler extends BaseHttpHandler implements HttpHandler {
 
-    public PrioritizedTasksHandler(TaskManager taskManager, Gson gson) {
-        this.taskManager = taskManager;
-        this.gson = new GsonBuilder()
-                .registerTypeAdapter(Duration.class, new DurationAdapter())
-                .registerTypeAdapter(LocalDateTime.class, new LocalDateAdapter())
-                .create();
+    public PrioritizedTasksHandler(TaskManager taskManager) {
+        super(taskManager);
     }
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
-        super.handle(exchange);
+        handle(exchange);
         String method = exchange.getRequestMethod();
         String response;
 
