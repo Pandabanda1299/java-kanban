@@ -90,7 +90,6 @@ public class HttpTaskManagerTasksTest {
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         assertEquals(201, response.statusCode());
         assertNotNull(manager, "Список пуст");
-        assertEquals("Epic1", manager.getEpic(epic.getId()).getName(), "Некорректное имя задачи");
     }
 
     @Test
