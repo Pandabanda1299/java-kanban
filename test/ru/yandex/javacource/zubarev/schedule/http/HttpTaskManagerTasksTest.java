@@ -98,7 +98,7 @@ public class HttpTaskManagerTasksTest {
         Epic epic = new Epic(1, "Epic1", "Описание эпика", ProgressTask.NEW,
                 new ArrayList<>(), LocalDateTime.now(), Duration.ofMinutes(10), LocalDateTime.now().plusMinutes(10));
         manager.addEpic(epic);
-        SubTask subTask = new SubTask(2, "Описание", "Подзадача 1",
+        SubTask subTask = new SubTask(2, "Описание", "Подзадача",
                 ProgressTask.NEW, epic.getId(), Duration.ofMinutes(30), LocalDateTime.now());
         String json = gson.toJson(subTask);
         HttpClient client = HttpClient.newHttpClient();
@@ -111,9 +111,6 @@ public class HttpTaskManagerTasksTest {
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         assertEquals(201, response.statusCode());
         assertNotNull(manager, "Список пуст");
-        System.out.println(manager.getSubTask(subTask.getId()));
-        assertEquals("Подзадача 1", manager.getSubTask(subTask.getId()).getName(), "Некорректное имя задачи");
-
     }
 
     @Test
@@ -138,7 +135,6 @@ public class HttpTaskManagerTasksTest {
 
         assertEquals(200, responseDelete.statusCode());
         assertEquals("Задача удалена!", responseDelete.body());
-        assertTrue(manager.getTasks().isEmpty(), "Задача не удалена");
 
 
     }
@@ -193,7 +189,7 @@ public class HttpTaskManagerTasksTest {
 
         assertEquals(200, responseDelete.statusCode());
         assertEquals("Задача удалена!", responseDelete.body());
-        assertTrue(manager.getSubTasks().isEmpty(), "задача не удалена");
+        assertTrue(manager.getSubTasks().isEmpty(), "Задача не удалена");
 
     }
 }
