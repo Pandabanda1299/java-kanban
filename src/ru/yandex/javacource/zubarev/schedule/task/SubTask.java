@@ -8,7 +8,7 @@ public class SubTask extends Task {
     private int epicId;
 
     public SubTask(int id, String descriptionTask, String nameTask, ProgressTask progress, int idEpicTask, Duration durationTask, LocalDateTime start) {
-        super(descriptionTask, nameTask, ProgressTask.NEW);
+        super(id, nameTask, descriptionTask, progress);
         this.epicId = idEpicTask;
         this.setDuration(durationTask);
         this.setStartTime(start);
